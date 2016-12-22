@@ -1,0 +1,33 @@
+{
+    "description": "", 
+    "hooks": [
+        {
+            "action" : "file-action",
+            "filetypes" : ["jpg", "jpeg", "png", "dxf"],
+            "title" : "Convert to GCode",
+            "icon" : "fa-retweet",
+            "url" : "plugin/fab_laser/convert/$1"
+        }
+    ], 
+    "required_bundles": [], 
+    "icon": "", 
+    "author_uri": "www.fabtotum.com", 
+    "name": "Laser Utils", 
+    "author": "FABteam", 
+    "menu": {
+        "/fab_laser": {
+            "url": "plugin/fab_laser/convert", 
+            "icon": "fa-cube", 
+            "title": "Laser Utils"
+        },
+        "/make/laser": {
+            "title": "Laser",
+            "icon": "fa-sun-o", 
+            "url": "plugin/fab_laser/make"
+        }
+    }, 
+    "plugin_uri": "https://github.com/FABtotum/fab_laser", 
+    "version": "1.0", 
+    "plugin_slug": "fab_laser", 
+    "filetypes": ["jpg", "jpeg", "png", "dxf"]
+}
