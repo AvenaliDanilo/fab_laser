@@ -1,12 +1,21 @@
 {
-    "description": "", 
+    "description": "Laser Engraving Utilities", 
     "hooks": [
         {
             "action" : "file-action",
             "filetypes" : ["jpg", "jpeg", "png", "dxf"],
+            "printtypes" : [],
             "title" : "Convert to GCode",
             "icon" : "fa-retweet",
             "url" : "plugin/fab_laser/convert/$1"
+        },
+        {
+            "action" : "file-action",
+            "filetypes" : [],
+            "printtypes" : ["laser"],
+            "title" : "Engrave",
+            "icon" : "fa-retweet",
+            "url" : "plugin/fab_laser/make/$1"
         }
     ], 
     "required_bundles": [], 

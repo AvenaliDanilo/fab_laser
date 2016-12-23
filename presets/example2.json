@@ -1,0 +1,25 @@
+{
+	"info" : {
+		"name" : "Example2",
+		"material" : "Adamantium",
+		"Description" : "Constant PWM and variable speed"
+	},
+	"speed" : {
+		"type" : "linear",
+		"in-min" : 0,
+		"in-max" : 255,
+		"out-min" : 1000,
+		"out-max" : 500,
+		"travel" : 10000
+	},
+	"pwm" : {
+		"type" : "const",
+		"value" : 255
+	},
+	"skip" : {
+		"type" : "modulo",
+		"mod" : 1,
+		"on" : [0],
+		"interleave" : false
+	}
+}

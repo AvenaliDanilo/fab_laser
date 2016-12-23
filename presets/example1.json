@@ -1,0 +1,22 @@
+{
+	"info" : {
+		"name" : "Example1",
+		"material" : "Adamantium",
+		"Description" : "Constant speed and constant PWM and one skipped line"
+	},
+	"speed" : {
+		"type" : "const",
+		"burn" : 1000,
+		"travel" : 10000
+	},
+	"pwm" : {
+		"type" : "const",
+		"value" : 255
+	},
+	"skip" : {
+		"type" : "modulo",
+		"mod" : 2,
+		"on" : [0],
+		"interleave" : false
+	}
+}

@@ -1,0 +1,30 @@
+{
+	"info" : {
+		"name" : "PCB Engraving",
+		"material" : "UV Resin",
+		"Description" : "Used to activate UV sensitive covered PCBs"
+	},
+	"speed" : {
+		"type" : "const",
+		"burn" : 3500,
+		"travel" : 10000
+	},
+	"pwm" : {
+		"type" : "linear",
+		"in-min" : 50,
+		"in-max" : 255,
+		"out-min" : 0,
+		"out-max" : 255,
+		"off_during_travel" : true
+	},
+	"skip" : {
+		"type" : "modulo",
+		"mod" : 1,
+		"on" : [0],
+		"interleave" : false
+	},
+	"color-mapping" : {
+		"1" : "cut",
+		"7" : 255
+	}
+}

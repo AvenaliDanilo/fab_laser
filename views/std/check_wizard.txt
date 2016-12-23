@@ -1,0 +1,45 @@
+	//enable/disable wizard buttons
+	function checkWizard()
+	{
+		console.log('check Wizard');
+		var step = $('.wizard').wizard('selectedItem').step;
+		console.log(step);
+		switch(step){
+			<?php foreach($steps as $step):?>
+				/* Step logic */
+				case <?php echo $step['number']; ?>:
+					/* Set prev button title */
+					<?php if( array_key_exists('prev', $step) ): ?>
+						$('.btn-prev').find('span').html("<?php echo $step['prev']; ?>");
+					<?php else: ?>
+						$('.btn-prev').find('span').html("Prev");
+					<?php endif; ?>
+					/* Set next button title */
+					<?php if( array_key_exists('next', $step) ): ?>
+						$('.btn-next').find('span').html("<?php echo $step['next']; ?>");
+					<?php else: ?>
+						$('.btn-next').find('span').html("Next");
+					<?php endif; ?>
+					
+					<?php if( array_key_exists('exec', $step) ) echo $step['exec'].';'; ?>
+					
+					<?php if( $step['number'] == (count($steps)-1) ): ?>
+					//~ disableButton('.btn-next');
+					return false;
+					<?php endif; ?>
+					
+					<?php if( $step['number'] > 1 ): ?>
+					enableButton('.btn-prev');
+					<?php else: ?>
+					disableButton('.btn-prev');
+					<?php endif; ?>
+					
+					<?php if( $step['number'] == 1 ): ?>
+					enableButton('.btn-next');
+					<?php endif; ?>
+					
+					
+					break;
+			<?php endforeach; ?>
+		}
+	}

@@ -1,2 +1,2 @@
-# plugin-laser
-Laser Plugin
+# FABtotum official laser plugin
+Laser Engraving utilities plugin.
