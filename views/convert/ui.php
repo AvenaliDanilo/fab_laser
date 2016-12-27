@@ -12,7 +12,10 @@
 <div class="row">
 	
 	<div class="col-sm-7">
-		
+		<div class="debug-preview text-center">
+			<img id="preview" src="/temp/debug.png" class="margin-bottom-10">
+			<div class="debug-loading" style="display:none" id="loading"><i class="fa fa-cog fa-spin fa-3x fa-fw"></i></div>
+		</div>
 	</div>
 	
 	<div class="col-sm-5">
@@ -39,6 +42,14 @@
 			<section>
 				<p class="font-sm margin-top-10">Number of gray levels: </p>
 				<div id="gray-slider" class="noUiSlider noUi-target"></div>
+			</section>
+			<section>
+				<div class="checkbox">
+					<label>
+					  <input id="invert" type="checkbox" class="checkbox style-0" checked="checked">
+					  <span>Invert colors</span>
+					</label>
+				</div>
 			</section>
 		</fieldset>
 		<hr class="simple">

@@ -60,13 +60,21 @@
 			}
 		});
 		
+		// Because W or H are calculated only one is needed so make the
+		// other zero.
 		$("#target_width").on('change', function(e){
 			$("#target_height").val("0");
-		})
+			trigger_debug_update();
+		});
+		
 		$("#target_height").on('change', function(e){
 			$("#target_width").val("0");
-		})
+			trigger_debug_update();
+		});
 		
+		$("#invert").on('change', function(e){
+			trigger_debug_update();
+		});
 		
 		profiles = jQuery.parseJSON('<?php echo json_encode($presets);?>');
 		
@@ -295,7 +303,7 @@
 	/**
 	 * Save UI data to profile.
 	 */
-	function save_profile(idx)
+	function save_profile(idx, action = 'save')
 	{
 		var data = {};
 		$(".slicing-profile :input").each(function (index, value) {
@@ -318,11 +326,11 @@
 		
 	 	$.ajax({
 			type: "POST",
-			url: "<?php echo site_url( plugin_url('modifyPreset').'/save' );?>/" + filename,
+			url: "<?php echo site_url( plugin_url('modifyPreset') );?>/" + action + "/" + filename,
 			dataType: 'json',
 			data : data
 		}).done(function( result ) {
-			console.log(result);
+			
 		});
 	}
 	
@@ -350,6 +358,7 @@
 		var profile_index = $(this).val();
 		console.log('profile changed', profile_index);
 		load_profile(profile_index);
+		trigger_debug_update();
 	}
 	
 	function speed_mode_change()
@@ -401,12 +410,62 @@
 			console.log("value changed", e);
 			modified = true;
 			update_modified();
+			trigger_debug_update();
 		}
+	}
+	
+	function trigger_debug_update()
+	{
+		// postpone value change to reduce overloading the communication
+		clearTimeout(update_timer);
+		update_timer = setTimeout(apply_new_values, 1000);
 	}
 
 	function apply_new_values()
 	{
-
+		// TODO: disable inputs during update
+		console.log('applying new_values...');
+		
+		var tw = $("#target_width").val();
+		var th = $("#target_height").val();
+		var invert = $("#invert").is(":checked")?"yes":"no";
+		
+		var preset_path = "<?php echo $profile_path; ?>";
+		
+		var filename = preset_path + "/" + profiles[active_profile].filename;
+		if(modified)
+		{
+			save_profile(active_profile, 'temp');
+			console.log('saving to temp file...');
+			filename = "/tmp/fabui/laser_profile.json";
+		}
+		
+		data = {
+			profile : filename,
+			target_width : tw,
+			target_height : th,
+			levels : levels,
+			invert : invert
+		}
+		
+		console.log(data);
+		
+		$("#loading").slideDown();
+		
+	 	$.ajax({
+			type: "POST",
+			url: "<?php echo site_url( plugin_url('generateGCode') );?>",
+			data: data,
+			dataType: 'json'
+		}).done(function( data ) {
+			console.log(data);
+			$("#loading").slideUp();
+			
+			var new_src = "/temp/debug.png?" + new Date().getTime();
+			
+			$("#preview").attr('src', new_src);
+		});
+		
 	}
 
 	/**
@@ -424,6 +483,7 @@
 		
 		sweepSlider.noUiSlider.on('slide',  function(e){
 			levels = parseInt(e);
+			trigger_debug_update();
 		});
 	}
 

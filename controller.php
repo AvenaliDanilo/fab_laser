@@ -170,6 +170,7 @@ class Plugin_fab_laser extends FAB_Controller {
 		$data['skip_modes'] = $skip_modes;
 		$data['presets_combo'] = $presets_combo;
 		$data['presets'] = $presets;
+		$data['profile_path'] = plugin_path() . '/presets';
 		
 		$file = $this->files->get($fileID, 1);
 		$file_is_ok = False;
@@ -228,12 +229,11 @@ class Plugin_fab_laser extends FAB_Controller {
 			$this->addJSFile('/assets/js/plugin/datatables/dataTables.bootstrap.min.js'); //datatable
 			$this->addJSFile('/assets/js/plugin/datatable-responsive/datatables.responsive.min.js'); //datatable */
 		}
-		
-		
 
 		$this->addJsInLine($this->load->view( plugin_url('convert/js'), $data, true));
 		$this->addJSFile('/assets/js/plugin/fuelux/wizard/wizard.min.old.js'); //wizard
 		$this->addJSFile('/assets/js/plugin/jquery-validate/jquery.validate.min.js'); //validator
+		$this->addCSSFile(plugin_assets_url('css/convert.css'));
 		
 		$this->addJsInLine($this->load->view( plugin_url('std/task_wizard_js'), $data, true));
 		$this->addJsInLine($this->load->view( plugin_url('std/select_file_js'), $data, true));
@@ -281,6 +281,12 @@ class Plugin_fab_laser extends FAB_Controller {
 		
 		switch($action)
 		{
+			case "temp":
+				$data = arrayFromPost($this->input->post());
+				$filename = "/tmp/fabui/laser_profile.json";
+				$result['success'] = write_file($filename, json_encode($data));
+				$result['filename'] = $filename;
+				break;
 			case "save":
 			case "add":
 				$data = arrayFromPost($this->input->post());
@@ -354,6 +360,39 @@ class Plugin_fab_laser extends FAB_Controller {
 		$files  = $this->tasks->getLastCreations($task_type);
 		$aaData = $this->dataTableFormat($files);
 		$this->output->set_content_type('application/json')->set_output(json_encode(array('aaData' => $aaData)));
+	}
+	
+	public function generateGCode()
+	{
+		$postData = $this->input->post();
+		
+		$this->load->helper('plugin_helper');
+
+		$params = array(
+			$postData['profile'],
+			'/mnt/userdata/uploads/jpg/bd6696d427fc20fccbb3528dd182578f.jpg',
+			'-W' => $postData['target_width'],
+			'-H' => $postData['target_height'],
+			'-l' => $postData['levels'],
+			'-d',
+			'-o' => "/tmp/fabui/output.gcode"
+		);
+		
+		if($postData['invert'] == 'yes')
+		{
+			$params[] = '-i';
+		}
+		
+		$log = startPluginPyScript('img2gcode.py', $params, false);
+		
+		$response = false;
+		
+		if($log)
+		{
+			$response = true;
+		}
+		
+		$this->output->set_content_type('application/json')->set_output(json_encode($response));
 	}
 	
 	public function startTask()
