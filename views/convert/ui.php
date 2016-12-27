@@ -16,6 +16,7 @@
 	</div>
 	
 	<div class="col-sm-5">
+		
 		<!-- Target size, levels -->
 		<fieldset>
 			<div class="row">
@@ -23,7 +24,7 @@
 					<label>Target dimensions in mm</label>
 					<div class="input-group margin-top-5">
 						<span class="input-group-addon">Width</span>
-						<input class="form-control" type="number" value="0">
+						<input class="form-control" id="target_width", type="number" value="30">
 					</div>
 				</section>
 				
@@ -31,7 +32,7 @@
 					<label>&nbsp;</label>
 					<div class="input-group margin-top-5">
 						<span class="input-group-addon">Height</span>
-						<input class="form-control" type="number" value="0">
+						<input class="form-control" id="target_height" type="number" value="0">
 					</div>
 				</section>
 			</div>
@@ -60,13 +61,19 @@
 		
 		<hr class="simple">
 		
-		<div id="all-settings" style="display:none">
-		
+		<div id="all-settings" style="display:none" class="slicing-profile">
+
+		<fieldset style="display:none">
+			<input type="text" id="info-name" name="info-name" value=""/>
+			<input type="text" id="info-material" name="info-material" value=""/>
+			<input type="text" id="info-description" name="info-description" value=""/>
+		</fieldset>
+
 		<!-- Feedrate -->
 		<fieldset>
 			<section>
 				<label>Feedrate mode</label>
-				<select class="form-control" id="speed-mode">
+				<select class="form-control monitor-change" id="speed-mode" name="speed-type">
 					<option value="const" selected="selected">Constant</option>
 					<option value="linear">Linear mapping</option>
 				</select>
@@ -78,13 +85,13 @@
 					<section class="col-sm-6 col-xs-6">
 						<div class="input-group margin-top-10">
 							<span class="input-group-addon">Input-min</span>
-							<input name="speed-input-min" class="form-control" type="number" value="0">
+							<input name="speed-in_min" class="form-control monitor-change" type="number" value="0">
 						</div>
 					</section>
 					<section class="col-sm-6 col-xs-6">
 						<div class="input-group margin-top-10">
 							<span class="input-group-addon">Input-max</span>
-							<input name="speed-input-max" class="form-control" type="number" value="0">
+							<input name="speed-in_max" class="form-control monitor-change" type="number" value="255">
 						</div>
 					</section>
 				</div>
@@ -93,13 +100,13 @@
 					<section class="col-sm-6 col-xs-6">
 						<div class="input-group margin-top-10">
 							<span class="input-group-addon">Output-min</span>
-							<input name="speed-output-min" class="form-control" type="number" value="0">
+							<input name="speed-out_min" class="form-control monitor-change" type="number" value="0">
 						</div>
 					</section>
 					<section class="col-sm-6 col-xs-6">
 						<div class="input-group margin-top-10">
-							<span class="input-group-addon">Outpu-max</span>
-							<input name="speed-output-max" class="form-control" type="number" value="0">
+							<span class="input-group-addon">Output-max</span>
+							<input name="speed-out_max" class="form-control monitor-change" type="number" value="255">
 						</div>
 					</section>
 				</div>
@@ -111,13 +118,13 @@
 					<section class="col-sm-6 col-xs-6">
 						<div class="input-group margin-top-10">
 							<span class="input-group-addon">Burn</span>
-							<input name="speed-burn" class="form-control" type="number" value="0">
+							<input name="speed-burn" class="form-control monitor-change" type="number" value="1000">
 						</div>
 					</section>
 					<section class="col-sm-6 col-xs-6">
 						<div class="input-group margin-top-10">
 							<span class="input-group-addon">Travel</span>
-							<input name="speed-travel" class="form-control" type="number" value="0">
+							<input name="speed-travel" class="form-control monitor-change" type="number" value="10000">
 						</div>
 					</section>
 				</div>
@@ -130,7 +137,7 @@
 		<fieldset>
 			<section>
 				<label>PWM mode</label>
-				<select class="form-control" id="pwm-mode">
+				<select class="form-control monitor-change" id="pwm-mode" name="pwm-type">
 					<option value="const" selected="selected">Constant</option>
 					<option value="linear">Linear mapping</option>
 				</select>
@@ -143,13 +150,13 @@
 					<section class="col-sm-6 col-xs-6">
 						<div class="input-group margin-top-10">
 							<span class="input-group-addon">Input-min</span>
-							<input name="pwm-input-min" class="form-control" type="number" value="0">
+							<input name="pwm-in_min" class="form-control monitor-change" type="number" value="0">
 						</div>
 					</section>
 					<section class="col-sm-6 col-xs-6">
 						<div class="input-group margin-top-10">
 							<span class="input-group-addon">Input-max</span>
-							<input name="pwm-input-max" class="form-control" type="number" value="0">
+							<input name="pwm-in_max" class="form-control monitor-change" type="number" value="0">
 						</div>
 					</section>
 				</div>
@@ -158,13 +165,13 @@
 					<section class="col-sm-6 col-xs-6">
 						<div class="input-group margin-top-10">
 							<span class="input-group-addon">Output-min</span>
-							<input name="pwm-output-min" class="form-control" type="number" value="0">
+							<input name="pwm-out_min" class="form-control monitor-change" type="number" value="0">
 						</div>
 					</section>
 					<section class="col-sm-6 col-xs-6">
 						<div class="input-group margin-top-10">
 							<span class="input-group-addon">Outpu-max</span>
-							<input name="pwm-output-max" class="form-control" type="number" value="0">
+							<input name="pwm-out_max" class="form-control monitor-change" type="number" value="0">
 						</div>
 					</section>
 				</div>
@@ -176,7 +183,7 @@
 					<section class="col-sm-6 col-xs-6">
 						<div class="input-group margin-top-10">
 							<span class="input-group-addon">Value</span>
-							<input name="pwm-value" class="form-control" type="number" value="0">
+							<input name="pwm-value" class="form-control monitor-change" type="number" value="0">
 						</div>
 					</section>
 				</div>
@@ -189,7 +196,7 @@
 		<fieldset>
 			<section>
 				<label>Skip line mode</label>
-				<select class="form-control" id="skip-mode">
+				<select class="form-control monitor-change" id="skip-mode" name="skip-type">
 					<option value="modulo" selected="selected">Modulo</option>
 				</select>
 			</section>
@@ -198,13 +205,13 @@
 				<section class="col-sm-6 col-xs-6">
 					<div class="input-group margin-top-10">
 						<span class="input-group-addon">Mod</span>
-						<input name="skip-mod" class="form-control" type="number" value="0">
+						<input name="skip-mod" class="form-control monitor-change" type="number" value="0">
 					</div>
 				</section>
 				<section class="col-sm-6 col-xs-6">
 					<div class="input-group margin-top-10">
 						<span class="input-group-addon">List [on]</span>
-						<input name="skip-on-list" class="form-control" type="number" value="0">
+						<input name="skip-on" class="form-control monitor-change" type="text" value="0">
 					</div>
 				</section>
 			</div>
@@ -213,7 +220,8 @@
 		</fieldset>
 		
 		<hr class="simple">
-		
+				<!-- TODO: cut settings -->
+				
 		</div>
 		
 		<div class="row">
@@ -223,8 +231,51 @@
 		</div>
 		
 		<hr class="simple">
-		
 	</div>
 
 	
+</div>
+
+
+<!-- ADD PROFILE MODAL -->
+<div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Add new profile</i></h4>
+			</div>
+
+			<div class="modal-body custom-scroll " id="progressModalBody">
+				<form id="newProfileForm">
+					<fieldset>
+						<section>
+							<div class="input-group margin-top-10">
+								<span class="input-group-addon">Name</span>
+								<input id="profile_name" name="profile_name" class="form-control" type="text" value="New Profile">
+							</div>
+						</section>
+						
+						<section>
+							<div class="input-group margin-top-10">
+								<span class="input-group-addon">Material</span>
+								<input id="profile_material" name="profile_material" class="form-control" type="text" value="Generic">
+							</div>
+						</section>
+						
+						<section>
+							<div class="input-group margin-top-10">
+								<span class="input-group-addon">Description</span>
+								<input id="profile_desc" name="profile_desc" class="form-control" type="text" value="">
+							</div>
+						</section>
+					</fieldset>
+				</form>
+			</div>
+
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+				<button type="button" class="btn btn-primary" id="modalAddButton"><i class="fa fa-check"></i> Add </button>
+			</div>
+		</div>
+	</div>
 </div>

@@ -233,6 +233,7 @@ class Plugin_fab_laser extends FAB_Controller {
 
 		$this->addJsInLine($this->load->view( plugin_url('convert/js'), $data, true));
 		$this->addJSFile('/assets/js/plugin/fuelux/wizard/wizard.min.old.js'); //wizard
+		$this->addJSFile('/assets/js/plugin/jquery-validate/jquery.validate.min.js'); //validator
 		
 		$this->addJsInLine($this->load->view( plugin_url('std/task_wizard_js'), $data, true));
 		$this->addJsInLine($this->load->view( plugin_url('std/select_file_js'), $data, true));
@@ -262,8 +263,40 @@ class Plugin_fab_laser extends FAB_Controller {
 		return $presets;
 	}
 	
-	public function modifyPreset($preset, $action)
+	public function test()
 	{
+		$this->output->set_content_type('application/json')->set_output(json_encode(array(true)));
+	}
+	
+	public function modifyPreset($action, $preset = '')
+	{
+		$this->load->helper('plugin_helper');
+		$this->load->helpers('utility_helper');
+		$this->load->helper('file');
+		$presets_path = plugin_path() . '/presets';
+		$filename = $presets_path . '/' . $preset;
+		
+		$result = array();
+		$result['success'] = false;
+		
+		switch($action)
+		{
+			case "save":
+			case "add":
+				$data = arrayFromPost($this->input->post());
+				$result['success'] = write_file($filename, json_encode($data));
+				$result['filename'] = $filename;
+				break;
+			case "remove":
+				$result['success'] = unlink($filename);
+				break;
+			case "reload":
+				$result['list'] = $this->getPresets();
+				$result['success'] = true;
+				break;
+		}
+		
+		$this->output->set_content_type('application/json')->set_output(json_encode($result));
 	}
 	
 	/**

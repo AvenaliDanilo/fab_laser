@@ -20,30 +20,73 @@
 	var do_not_apply = false;
 
 	var profiles = {};
+	var active_profile = 0;
+	var pwm_settings = 'none';
+	var speed_settings = 'none';
+	var skip_settings = 'none';
+	var cut_settings = 'none';
 
 	$(document).ready(function() {
 		initSlider();
 		
 		$("#more-details").on('click', more_details)
 		$(".modify-profile").on('click', modify_profile)
+		$(".monitor-change").on('change', value_change);
 		$("#laser-profile").on('change', profile_change);
-		$(".form-control").on('change', value_change);
 		$("#pwm-mode").on('change', pwm_mode_change);
 		$("#speed-mode").on('change', speed_mode_change);
 		$("#skip-mode").on('change', skip_mode_change);
+		$("#modalAddButton").on('click', add_profile);
+
+		$("#newProfileForm").validate({
+			rules:{
+				profile_name:{
+					required: true
+				},
+				profile_material:{
+					required: true
+				}
+			},
+			messages: {
+				profile_name: {
+					required: 'Please type a profile name'
+				},
+				profile_material: {
+					required: 'Please type a profile material'
+				}
+			},
+			errorPlacement : function(error, element) {
+				error.insertAfter(element.parent());
+			}
+		});
+		
+		$("#target_width").on('change', function(e){
+			$("#target_height").val("0");
+		})
+		$("#target_height").on('change', function(e){
+			$("#target_width").val("0");
+		})
 		
 		
 		profiles = jQuery.parseJSON('<?php echo json_encode($presets);?>');
 		
-		console.log('profiles', profiles);
+		load_profile(active_profile);
 	});
 	
+	/**
+	 * Load a specific profile to the UI
+	 */
 	function load_profile(idx)
 	{
 		var p = profiles[idx];
-		console.log( p.info.name )
-		console.log( p.speed.type )
-		console.log( p.pwm.type )
+		
+		active_profile = idx;
+		
+		do_not_apply = true;
+		
+		$("[name='info-name']").val(p.info.name);
+		$("[name='info-material']").val(p.info.material);
+		$("[name='info-description']").val(p.info.description);
 		
 		$("#speed-mode").val(p.speed.type).trigger('change');
 		switch(p.speed.type)
@@ -53,10 +96,10 @@
 				$("[name='speed-travel']").val(p.speed.travel);
 				break;
 			case "linear":
-				$("[name='speed-input-min']").val(p.speed["in-max"]);
-				$("[name='speed-input-max']").val(p.speed["in-min"]);
-				$("[name='speed-output-min']").val(p.speed["out-min"]);
-				$("[name='speed-output-max']").val(p.speed["out-max"]);
+				$("[name='speed-in_min']").val(p.speed["in_max"]);
+				$("[name='speed-in_max']").val(p.speed["in_min"]);
+				$("[name='speed-out_min']").val(p.speed["out_min"]);
+				$("[name='speed-out_max']").val(p.speed["out_max"]);
 				break;
 		}
 		
@@ -67,15 +110,54 @@
 				$("[name='pwm-value']").val(p.pwm.value);
 				break;
 			case "linear":
-				console.log('pwm-in-max', p.pwm["in-max"]);
-				$("[name='pwm-input-min']").val(p.pwm["in-max"]);
-				$("[name='pwm-input-max']").val(p.pwm["in-min"]);
-				$("[name='pwm-output-min']").val(p.pwm["out-min"]);
-				$("[name='pwm-output-max']").val(p.pwm["out-max"]);
+				$("[name='pwm-in_min']").val(p.pwm["in_max"]);
+				$("[name='pwm-in_max']").val(p.pwm["in_min"]);
+				$("[name='pwm-out_min']").val(p.pwm["out_min"]);
+				$("[name='pwm-out_max']").val(p.pwm["out_max"]);
 				break;
 		}
 		
+		switch(p.skip.type)
+		{
+			case "modulo":
+				$("[name='skip-mod']").val(p.skip["mod"]);
+				var on_list = p.skip["on"];
+				var val = "";
+				var is_first = true;
+				for(i=0; i<on_list.length; i++)
+				{
+					if(is_first)
+					{
+						is_first = false;
+					}
+					else
+						val += ", ";
+					val += on_list[i]
+				}
+				
+				$("[name='skip-on']").val(val);
+				
+				break;
+		}
 		$("#skip-mode").val(p.skip.type).trigger('change');
+		
+		modified = false;
+		update_modified();
+		
+		do_not_apply = false;
+	}
+
+	function update_modified()
+	{
+		if(modified)
+		{
+			
+			$("[data-attribute='save']").removeClass("btn-default").addClass("btn-primary");
+		}
+		else
+		{
+			$("[data-attribute='save']").removeClass("btn-primary").addClass("btn-default");
+		}
 	}
 
 	function more_details()
@@ -96,6 +178,9 @@
 		return false;
 	}
 
+	/**
+	 * Profile modify action interpreter.
+	 */
 	function modify_profile()
 	{
 		var action = $(this).attr('data-attribute');
@@ -104,9 +189,160 @@
 		switch(action)
 		{
 			case "save":
+				save_profile(active_profile);
 				modified = false;
+				update_modified();
+				break;
+			case "add":
+				$('#profileModal').modal('show');
+				break;
+			case "remove":
+				$.SmartMessageBox({
+						title: "<i class='fa fa-warning txt-color-orangeDark'></i> Warning!",
+						content: "Do you really want to remove \""+profiles[active_profile].info.name+" ["+profiles[active_profile].info.material+"]\" profile",
+						buttons: '[No][Yes]'
+				}, function(ButtonPressed) {
+					if (ButtonPressed === "Yes") 
+					{
+						remove_profile(active_profile);
+						
+					}
+					if (ButtonPressed === "No")
+					{
+					}
+				});
 				break;
 		}
+	}
+	
+	/**
+	 * Add a new profile.
+	 */
+	function add_profile()
+	{
+		if($("#newProfileForm").valid()){
+			
+			var name = $("#profile_name").val();
+			var filename = name.replace(/ /g,'_').toLowerCase() + '.json';
+			
+			data = {
+				info : {
+					name: name,
+					material: $("#profile_material").val(),
+					description: $("#profile_desc").val(),
+					},
+				speed : {
+					type : "const",
+					burn : 1000,
+					travel : 10000,
+					off_during_travel : false
+					},
+				pwm : {
+					type : "linear",
+					in_min : 0,
+					in_max : 255,
+					out_min : 0,
+					out_max : 255
+					},
+				skip : {
+					type : "modulo",
+					mod: 1,
+					on: [0]
+					},
+				cut : {
+					pwm : 255,
+					num_pass : 1,
+					z_step : 0.0
+					}
+			};
+			
+			$.ajax({
+				type: "POST",
+				url: "<?php echo site_url( plugin_url('modifyPreset').'/save' );?>/" + filename,
+				data : data,
+				dataType: 'json'
+			}).done(function( data ) {
+				reload_profiles();
+			});
+			
+			$('#profileModal').modal('hide');
+			more_details();
+		}
+	}
+	
+	/**
+	 * Remove specific profile.
+	 */
+	function remove_profile(idx)
+	{
+		filename = profiles[idx].filename;
+		
+	 	$.ajax({
+			type: "POST",
+			url: "<?php echo site_url( plugin_url('modifyPreset').'/remove' );?>/" + filename,
+			dataType: 'json'
+		}).done(function( data ) {
+			
+			idx -= 1;
+			if(idx < 0)
+				idx = 0;
+			active_profile = idx;
+			
+			reload_profiles();
+		});
+	}
+	
+	/**
+	 * Save UI data to profile.
+	 */
+	function save_profile(idx)
+	{
+		var data = {};
+		$(".slicing-profile :input").each(function (index, value) {
+			var name = $(this).attr('name');
+			if(name)
+			{
+				if(name == "skip-on")
+				{
+					data[$(this).attr('name')] = $(this).val().split(',');
+				}
+				else if(name != "laser-profile")
+				{
+					data[$(this).attr('name')] = $(this).val();
+				}
+			}
+		});
+		console.log( data );
+		
+		filename = profiles[idx].filename;
+		
+	 	$.ajax({
+			type: "POST",
+			url: "<?php echo site_url( plugin_url('modifyPreset').'/save' );?>/" + filename,
+			dataType: 'json',
+			data : data
+		}).done(function( result ) {
+			console.log(result);
+		});
+	}
+	
+	function reload_profiles(selected = '')
+	{
+		$.get("<?php echo site_url( plugin_url('modifyPreset').'/reload' );?>", 
+			function(data, status){
+				profiles = data.list;
+				load_profile(active_profile);
+				
+				var html = "";
+				
+				for(i=0; i<profiles.length; i++)
+				{
+					p = profiles[i];
+					html += '<option value="'+i+'">'+p.info.name+' ['+p.info.material+']</option>'
+				}
+				
+				$("#laser-profile").html(html);
+			});
 	}
 	
 	function profile_change()
@@ -121,34 +357,56 @@
 		var mode = $(this).val();
 		console.log('mode', mode);
 		
-		$('.speed-settings').slideUp();
-		$('#speed-'+mode).slideDown();
+		if(speed_settings != mode)
+		{
+			$('.speed-settings').slideUp();
+			$('#speed-'+mode).slideDown();
+		}
+		
+		speed_settings = mode;
 	}
 	
 	function pwm_mode_change()
 	{
 		var mode = $(this).val();
 		console.log('mode', mode);
-		$('.pwm-settings').slideUp();
-		$('#pwm-'+mode).slideDown();
+		
+		if(pwm_settings != mode)
+		{
+			$('.pwm-settings').slideUp();
+			$('#pwm-'+mode).slideDown();
+		}
+		
+		pwm_settings = mode;
 	}
 	
 	function skip_mode_change()
 	{
 		var mode = $(this).val();
 		console.log('mode', mode);
-		$('.skip-settings').slideUp();
-		$('#skip-'+mode).slideDown();
+		
+		if(skip_settings != mode)
+		{
+			$('.skip-settings').slideUp();
+			$('#skip-'+mode).slideDown();
+		}
+		
+		skip_settings = mode;
 	}
 	
 	function value_change(e)
 	{
-		//~ console.log("value changed", e);
+		if(do_not_apply == false)
+		{
+			console.log("value changed", e);
+			modified = true;
+			update_modified();
+		}
 	}
 
 	function apply_new_values()
 	{
-		
+
 	}
 
 	/**

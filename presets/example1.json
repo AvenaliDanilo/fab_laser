@@ -2,7 +2,7 @@
 	"info" : {
 		"name" : "Example1",
 		"material" : "Adamantium",
-		"Description" : "Constant speed and constant PWM and one skipped line"
+		"description" : "Constant speed and constant PWM and one skipped line"
 	},
 	"speed" : {
 		"type" : "const",
