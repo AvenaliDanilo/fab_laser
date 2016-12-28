@@ -362,34 +362,40 @@ class Plugin_fab_laser extends FAB_Controller {
 		$this->output->set_content_type('application/json')->set_output(json_encode(array('aaData' => $aaData)));
 	}
 	
-	public function generateGCode()
+	public function generateGCode($fileId)
 	{
-		$postData = $this->input->post();
-		
-		$this->load->helper('plugin_helper');
+		$this->load->model('Files', 'files');
+		$file = $this->files->get($fileId, 1);
 
-		$params = array(
-			$postData['profile'],
-			'/mnt/userdata/uploads/jpg/bd6696d427fc20fccbb3528dd182578f.jpg',
-			'-W' => $postData['target_width'],
-			'-H' => $postData['target_height'],
-			'-l' => $postData['levels'],
-			'-d',
-			'-o' => "/tmp/fabui/output.gcode"
-		);
-		
-		if($postData['invert'] == 'yes')
-		{
-			$params[] = '-i';
-		}
-		
-		$log = startPluginPyScript('img2gcode.py', $params, false);
-		
 		$response = false;
-		
-		if($log)
+	
+		if($file)
 		{
-			$response = true;
+			$postData = $this->input->post();
+			
+			$this->load->helper('plugin_helper');
+
+			$params = array(
+				$postData['profile'],
+				$file['full_path'],
+				'-W' => $postData['target_width'],
+				'-H' => $postData['target_height'],
+				'-l' => $postData['levels'],
+				'-d',
+				'-o' => "/tmp/fabui/output.gcode"
+			);
+			
+			if($postData['invert'] == 'yes')
+			{
+				$params[] = '-i';
+			}
+			
+			$log = startPluginPyScript('img2gcode.py', $params, false);
+			
+			if($log)
+			{
+				$response = true;
+			}
 		}
 		
 		$this->output->set_content_type('application/json')->set_output(json_encode($response));

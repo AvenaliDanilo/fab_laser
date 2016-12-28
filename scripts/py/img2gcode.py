@@ -578,19 +578,36 @@ def main():
         if statistics:
             print lsr.stats
         
-        #~ if debug:
+        if debug:
             #~ os.system('LC_NUMERIC=C camotics output.gcode')
+            work_path = os.path.dirname(gcode_file)
+            dbg_file = os.path.join(work_path,'debug.png')
+            
+            dpm = 1.0 / dot_size
+            
+            work_width = int(drawing.width() * dpm) + 5
+            work_height = int(drawing.height() * dpm) + 5
+            
+            print "Debug (WxH):", work_width, work_height
+            
+            color = 0
+            #~ if invert:
+                #~ color = 255
+            
+            drawing.transform(dpm, dpm, 0, 0)
+            
+            dbg = DebugEngraver(dbg_file, work_width, work_height, color, dot_size, True, preset)
+            dbg.start()
+            dbg.draw(drawing)
+            dbg.end()
         
     elif ext == '.jpg' or ext == '.jpeg' or ext == '.png':
-        
-        print "preprocessing..."
         
         if levels > 1:
             result = preprocess_raster_image(image_file, target_width, target_height, dot_size, levels, invert, crop, debug=debug)
         else:
             result = preprocess_raster_image_bw(image_file, target_width, target_height, dot_size, 127, invert, crop, debug=debug)
-        
-        print "vectorizeing..."
+            
         drawing = vectorize_raster(result, preset)
 
         s = dot_size
@@ -609,7 +626,11 @@ def main():
             work_path = os.path.dirname(gcode_file)
             dbg_file = os.path.join(work_path,'debug.png')
             
-            dbg = DebugEngraver(dbg_file, result['work_width'], result['work_height'], 0, dot_size, preset)
+            color = 0
+            #~ if invert:
+                #~ color = 0
+            
+            dbg = DebugEngraver(dbg_file, result['work_width'], result['work_height'], color, dot_size, True, preset)
             dbg.start()
             dbg.draw(drawing)
             dbg.end()

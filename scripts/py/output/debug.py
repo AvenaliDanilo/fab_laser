@@ -35,11 +35,14 @@ class DebugEngraver(EngraverOutput):
     resolution of one dot per pixel.
     """
     
-    def __init__(self, filename, width, height, color = 0, dot_size = 0.1, preset = {}):
+    def __init__(self, filename, width, height, color = 0, dot_size = 0.1, invert = False, preset = {}):
         self.filename = filename
         self.dot_size = dot_size
         
-        self.invert = True
+        self.invert = invert
+        
+        if invert:
+            color = 255 - color
         
         self.dbg_img = np.ones((int(height), int(width), 1), np.uint8)*color
         super(DebugEngraver, self).__init__(preset)

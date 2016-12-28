@@ -10,6 +10,7 @@
 
 <script type="text/javascript">
 
+	var oldFileId = -1;
 	var idFile <?php echo $file_id != '' ? ' = '.$file_id : ''; ?>; //file to create
 	var idTask <?php echo $runningTask ? ' = '.$runningTask['id'] : ''; ?>;
 
@@ -29,14 +30,15 @@
 	$(document).ready(function() {
 		initSlider();
 		
-		$("#more-details").on('click', more_details)
-		$(".modify-profile").on('click', modify_profile)
-		$(".monitor-change").on('change', value_change);
-		$("#laser-profile").on('change', profile_change);
-		$("#pwm-mode").on('change', pwm_mode_change);
-		$("#speed-mode").on('change', speed_mode_change);
-		$("#skip-mode").on('change', skip_mode_change);
-		$("#modalAddButton").on('click', add_profile);
+		$("#more-details").on('click', moreDetails)
+		$(".modify-profile").on('click', modifyProfile)
+		$(".monitor-change").on('change', onValueChange);
+		$("#laser-profile").on('change', onProfileChange);
+		$("#pwm-mode").on('change', onPWMmodeChange);
+		$("#speed-mode").on('change', onSpeedModeChange);
+		$("#skip-mode").on('change', onSkipModeChange);
+		$("#modalAddButton").on('click', addProfile);
+		$("#preview").on('dblclick', triggerDebugUpdate);
 
 		$("#newProfileForm").validate({
 			rules:{
@@ -64,27 +66,29 @@
 		// other zero.
 		$("#target_width").on('change', function(e){
 			$("#target_height").val("0");
-			trigger_debug_update();
+			triggerDebugUpdate();
 		});
 		
 		$("#target_height").on('change', function(e){
 			$("#target_width").val("0");
-			trigger_debug_update();
+			triggerDebugUpdate();
 		});
 		
 		$("#invert").on('change', function(e){
-			trigger_debug_update();
+			triggerDebugUpdate();
 		});
 		
 		profiles = jQuery.parseJSON('<?php echo json_encode($presets);?>');
 		
-		load_profile(active_profile);
+		loadProfile(active_profile);
+		
+		triggerDebugUpdate();
 	});
 	
 	/**
 	 * Load a specific profile to the UI
 	 */
-	function load_profile(idx)
+	function loadProfile(idx)
 	{
 		var p = profiles[idx];
 		
@@ -150,12 +154,12 @@
 		$("#skip-mode").val(p.skip.type).trigger('change');
 		
 		modified = false;
-		update_modified();
+		updateModified();
 		
 		do_not_apply = false;
 	}
 
-	function update_modified()
+	function updateModified()
 	{
 		if(modified)
 		{
@@ -168,7 +172,7 @@
 		}
 	}
 
-	function more_details()
+	function moreDetails()
 	{
 		if(!details)
 		{
@@ -189,7 +193,7 @@
 	/**
 	 * Profile modify action interpreter.
 	 */
-	function modify_profile()
+	function modifyProfile()
 	{
 		var action = $(this).attr('data-attribute');
 		console.log('profile:', action);
@@ -197,9 +201,9 @@
 		switch(action)
 		{
 			case "save":
-				save_profile(active_profile);
+				saveProfile(active_profile);
 				modified = false;
-				update_modified();
+				updateModified();
 				break;
 			case "add":
 				$('#profileModal').modal('show');
@@ -212,7 +216,7 @@
 				}, function(ButtonPressed) {
 					if (ButtonPressed === "Yes") 
 					{
-						remove_profile(active_profile);
+						removeProfile(active_profile);
 						
 					}
 					if (ButtonPressed === "No")
@@ -226,7 +230,7 @@
 	/**
 	 * Add a new profile.
 	 */
-	function add_profile()
+	function addProfile()
 	{
 		if($("#newProfileForm").valid()){
 			
@@ -270,18 +274,18 @@
 				data : data,
 				dataType: 'json'
 			}).done(function( data ) {
-				reload_profiles();
+				reupdateModifieds();
 			});
 			
 			$('#profileModal').modal('hide');
-			more_details();
+			moreDetails();
 		}
 	}
 	
 	/**
 	 * Remove specific profile.
 	 */
-	function remove_profile(idx)
+	function removeProfile(idx)
 	{
 		filename = profiles[idx].filename;
 		
@@ -296,14 +300,14 @@
 				idx = 0;
 			active_profile = idx;
 			
-			reload_profiles();
+			reupdateModifieds();
 		});
 	}
 	
 	/**
 	 * Save UI data to profile.
 	 */
-	function save_profile(idx, action = 'save')
+	function saveProfile(idx, action = 'save')
 	{
 		var data = {};
 		$(".slicing-profile :input").each(function (index, value) {
@@ -334,12 +338,12 @@
 		});
 	}
 	
-	function reload_profiles(selected = '')
+	function reupdateModifieds(selected = '')
 	{
 		$.get("<?php echo site_url( plugin_url('modifyPreset').'/reload' );?>", 
 			function(data, status){
 				profiles = data.list;
-				load_profile(active_profile);
+				loadProfile(active_profile);
 				
 				var html = "";
 				
@@ -353,15 +357,15 @@
 			});
 	}
 	
-	function profile_change()
+	function onProfileChange()
 	{
 		var profile_index = $(this).val();
 		console.log('profile changed', profile_index);
-		load_profile(profile_index);
-		trigger_debug_update();
+		loadProfile(profile_index);
+		triggerDebugUpdate();
 	}
 	
-	function speed_mode_change()
+	function onSpeedModeChange()
 	{
 		var mode = $(this).val();
 		console.log('mode', mode);
@@ -375,7 +379,7 @@
 		speed_settings = mode;
 	}
 	
-	function pwm_mode_change()
+	function onPWMmodeChange()
 	{
 		var mode = $(this).val();
 		console.log('mode', mode);
@@ -389,7 +393,7 @@
 		pwm_settings = mode;
 	}
 	
-	function skip_mode_change()
+	function onSkipModeChange()
 	{
 		var mode = $(this).val();
 		console.log('mode', mode);
@@ -403,25 +407,28 @@
 		skip_settings = mode;
 	}
 	
-	function value_change(e)
+	function onValueChange(e)
 	{
 		if(do_not_apply == false)
 		{
 			console.log("value changed", e);
 			modified = true;
-			update_modified();
-			trigger_debug_update();
+			updateModified();
+			triggerDebugUpdate();
 		}
 	}
 	
-	function trigger_debug_update()
+	function triggerDebugUpdate(timeout = 1000)
 	{
 		// postpone value change to reduce overloading the communication
 		clearTimeout(update_timer);
-		update_timer = setTimeout(apply_new_values, 1000);
+		if(timeout == 0)
+			applyNewValues();
+		else
+			update_timer = setTimeout(applyNewValues, timeout);
 	}
 
-	function apply_new_values()
+	function applyNewValues()
 	{
 		// TODO: disable inputs during update
 		console.log('applying new_values...');
@@ -435,7 +442,7 @@
 		var filename = preset_path + "/" + profiles[active_profile].filename;
 		if(modified)
 		{
-			save_profile(active_profile, 'temp');
+			saveProfile(active_profile, 'temp');
 			console.log('saving to temp file...');
 			filename = "/tmp/fabui/laser_profile.json";
 		}
@@ -454,7 +461,7 @@
 		
 	 	$.ajax({
 			type: "POST",
-			url: "<?php echo site_url( plugin_url('generateGCode') );?>",
+			url: "<?php echo site_url( plugin_url('generateGCode') );?>/" + idFile,
 			data: data,
 			dataType: 'json'
 		}).done(function( data ) {
@@ -483,8 +490,13 @@
 		
 		sweepSlider.noUiSlider.on('slide',  function(e){
 			levels = parseInt(e);
-			trigger_debug_update();
+			triggerDebugUpdate();
 		});
+	}
+
+	function unlockSave()
+	{
+		enableButton('.btn-next');
 	}
 
 	/**
@@ -521,6 +533,13 @@
 				$('.btn-next').find('span').html('Next');
 				break;
 			case 2:
+				if(oldFileId != idFile)
+				{
+					oldFileId = idFile;
+					var new_src = "assets/plugin/fab_laser/img/empty_preview.png?" + new Date().getTime();
+					$("#preview").attr('src', new_src);
+					triggerDebugUpdate(0);
+				}
 				enableButton('.btn-prev');
 				disableButton('.btn-next');
 				$('.btn-next').find('span').html('Save');
@@ -566,13 +585,6 @@
 			closeWait();
 			//TODO freeze menu fabApp.freezeMenu();
 		})
-	}
-	
-	function jogSetAsZero()
-	{
-		console.log('set as zero');
-		enableButton('.btn-next');
-		return false;
 	}
 	
 </script>

@@ -12,10 +12,11 @@
 <div class="row">
 	
 	<div class="col-sm-7">
-		<div class="debug-preview text-center">
-			<img id="preview" src="/temp/debug.png" class="margin-bottom-10">
-			<div class="debug-loading" style="display:none" id="loading"><i class="fa fa-cog fa-spin fa-3x fa-fw"></i></div>
+		<div class="debug-preview text-center margin-bottom-10">
+			<img id="preview" src="assets/plugin/fab_laser/img/empty_preview.png" class="margin-bottom-10 margin-top-10">
+			<div class="debug-loading" style="display:none;" id="loading"><i class="fa fa-cog fa-spin fa-3x fa-fw"></i></div>
 		</div>
+		<div class="note">Note: Black is being burned by the laser.</div>
 	</div>
 	
 	<div class="col-sm-5">

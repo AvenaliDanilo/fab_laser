@@ -110,7 +110,7 @@ class Drawing2D(object):
         return x1,y1, np.absolute(x2-x1), np.absolute(y2-y1)
     
     def get_font(self, font):
-        filename = '/usr/share/librecad/fonts/{0}.lff'.format(font)
+        filename = '/var/lib/fabui/plugins/fab_laser/fonts/lff/{0}.lff'.format(font)
         
         print "loading font", filename
         
