@@ -28,7 +28,18 @@
 							</div>
 						</div>
 					</div>
-				</div>
+					<div class="smart-form">
+						<div class="row">
+							<section>
+								<label class="checkbox">
+									<input type="checkbox" name="checkbox" checked="checked">
+									<i></i>Calibrate Z focusing point (Suggested)</label>
+							</section>
+						</div>
+					</div>
+					
+					</div>
+					
 			    <div class="col-sm-6">
 			        <div class="text-center">
 			            <div class="row">

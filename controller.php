@@ -73,15 +73,15 @@ class Plugin_fab_laser extends FAB_Controller {
 			}
 		}
 		
-		$data['type']      = 'pcb';
+		$data['type']      = 'laser';
 		// select_file
 		$data['get_files_url'] = plugin_url('getFiles');
 		$data['get_reacent_url'] = plugin_url('getRecentFiles');
 		// task_wizard
 		$data['start_task_url'] = plugin_url('startTask');
 		// jog_setup
-		$data['jog_message'] = 'Jog the laser point to the desired origin point (X=0, Y=0, Z=0), press <i class="fa fa-bullseye"></i> and then press "Start" ';
-		$data['jog_image'] = plugin_assets_url('img/zero_milling.png');
+		$data['jog_message'] = 'Position the laser point to the origin (bottom-left corner) of the drawing. Jog to desired XY position, press <i class="fa fa-bullseye"></i> and then press "Start" ';
+		$data['jog_image'] = plugin_assets_url('img/fabui_laser_02a.png');
 		$data['fourth_axis'] = False;
 		
 		$data['steps'] = array(
@@ -91,15 +91,20 @@ class Plugin_fab_laser extends FAB_Controller {
 				 'active'  => !$file_is_ok
 			    ),
 				array('number'  => 2,
-				 'title'   => 'Get Ready',
-				 'content' => $this->load->view( plugin_url('std/jog_setup'), $data, true ),
+				 'title'   => 'Safety',
+				 'content' => $this->load->view( plugin_url('make/wizard/safety'), $data, true ),
 				 'active'  => $file_is_ok
+				 
 			    ),
 				array('number'  => 3,
+				 'title'   => 'Get Ready',
+				 'content' => $this->load->view( plugin_url('make/wizard/jog_setup'), $data, true ),
+			    ),
+				array('number'  => 4,
 				 'title'   => 'Laser Engraving',
 				 'content' => ''
 			    ),
-				array('number'  => 4,
+				array('number'  => 5,
 				 'title'   => 'Finish',
 				 'content' => '',
 			    )
@@ -113,7 +118,7 @@ class Plugin_fab_laser extends FAB_Controller {
 		$widgeFooterButtons = '';
 
 		$widget         = $this->smart->create_widget($widgetOptions);
-		$widget->id     = 'main-widget-head-installation';
+		$widget->id     = 'main-widget-make-laser';
 		$widget->header = array('icon' => 'fa-cube', "title" => "<h2>Laser Engraving</h2>");
 		$widget->body   = array('content' => $this->load->view(plugin_url('std/task_wizard'), $data, true ), 'class'=>'fuelux', 'footer'=>$widgeFooterButtons);
 

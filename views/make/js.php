@@ -13,6 +13,10 @@
 	var idFile <?php echo $file_id != '' ? ' = '.$file_id : ''; ?>; //file to create
 	var idTask <?php echo $runningTask ? ' = '.$runningTask['id'] : ''; ?>;
 
+	$(document).ready(function() {
+		$('#understandSafety').on('click', understandSafety);
+	});
+
 	/**
 	* freeze ui
 	*/
@@ -38,20 +42,38 @@
 		var step = $('.wizard').wizard('selectedItem').step;
 		console.log(step);
 		switch(step){
-			case 1:
+			case 1: // Select file
 				disableButton('.btn-prev');
 				if(idFile)
 					enableButton('.btn-next');
 				else
 					disableButton('.btn-next');
 				$('.btn-next').find('span').html('Next');
+				
+				//cmd = 'M60 S0\n';
+				//fabApp.jogMdi(cmd);
+				
 				break;
-			case 2:
+			case 2: // Safety
 				enableButton('.btn-prev');
 				disableButton('.btn-next');
-				$('.btn-next').find('span').html('Engrave');
+				$('.btn-next').find('span').html('Next');
+				
+				//cmd = 'M60 S0\n';
+				//fabApp.jogMdi(cmd);
+				
 				break;
-			case 3:
+			case 3: // Calibration
+				enableButton('.btn-prev');
+				disableButton('.btn-next');
+				$('.btn-next').find('span').html('Start');
+				
+				//cmd = 'M60 S10\nM300\n';
+				//fabApp.jogMdi(cmd);
+				break;
+				
+				break;
+			case 4: // Execution
 				startTask();
 				return false;
 				break; 
@@ -92,6 +114,12 @@
 			closeWait();
 			//TODO freeze menu fabApp.freezeMenu();
 		})
+	}
+	
+	function understandSafety()
+	{
+		enableButton('.btn-next');
+		return false;
 	}
 	
 	function jogSetAsZero()
