@@ -12,7 +12,7 @@
 
 	var idFile <?php echo $file_id != '' ? ' = '.$file_id : ''; ?>; //file to create
 	var idTask <?php echo $runningTask ? ' = '.$runningTask['id'] : ''; ?>;
-
+	
 	$(document).ready(function() {
 		$('#understandSafety').on('click', understandSafety);
 	});
@@ -66,18 +66,31 @@
 			case 3: // Calibration
 				enableButton('.btn-prev');
 				disableButton('.btn-next');
-				$('.btn-next').find('span').html('Start');
+				$('.btn-next').find('span').html('Engrave');
 				
 				//cmd = 'M60 S10\nM300\n';
 				//fabApp.jogMdi(cmd);
-				break;
 				
 				break;
 			case 4: // Execution
-				startTask();
+				<?php if($runningTask): ?>;
+				// do nothing
+				<?php else: ?>
+					startTask();
+				<?php endif; ?>
 				return false;
-				break; 
+				break;
+			case 5:
+				
+				$('.btn-next').find('span').html('');
 		}
+	}
+	
+	function setLaserPWM(action, value)
+	{
+		console.log(action, value);
+		message="Laser PWM set to: " + value;
+		showActionAlert(message);
 	}
 	
 	function startTask()
@@ -100,19 +113,21 @@
 				$('.wizard').wizard('selectedItem', { step: 2 });
 				showErrorAlert('Error', response.message);
 			}else{
-				//~ fabApp.resetTemperaturesPlot(50);
-				freezeUI();
-				//~ setInterval(timer, 1000);
-				//~ setInterval(jsonMonitor, 1000);
+
+				//setInterval(timer, 1000);
+				//setInterval(jsonMonitor, 1000);
 				idTask = response.id_task;
-				//~ initSliders();
-				//~ setTimeout(initGraph, 1000);
+				
+				<?php if($type == "print"): ?>
+				fabApp.resetTemperaturesPlot(50);
+				setTimeout(initGraph, 1000);
 				//~ setTemperaturesSlidersValue(response.temperatures.extruder, response.temperatures.bed);
-				//~ getTaskMonitor(true);
-				//~ updateZOverride(0);
+				<?php endif; ?>
+				
+				initRunningTaskPage();
+				updateZOverride(0);
 			}
 			closeWait();
-			//TODO freeze menu fabApp.freezeMenu();
 		})
 	}
 	

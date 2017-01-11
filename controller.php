@@ -59,8 +59,10 @@ class Plugin_fab_laser extends FAB_Controller {
 		
 		$data = array();
 		$data['runningTask'] = $this->runningTask;
+		//~ $data['runningTask'] = array('id' => 5);
 		$data['file_id'] = '';
 		
+		// Skip file selection step if fileID is provided
 		$file = $this->files->get($fileID, 1);
 		$file_is_ok = False;
 		if($file)
@@ -69,32 +71,58 @@ class Plugin_fab_laser extends FAB_Controller {
 			{
 				$data['file_id'] = $fileID;
 				$file_is_ok = True;
-				$data['fileid_jump_to'] = 2; // jump to step 2 if fileID is available
+				$data['wizard_jump_to'] = 2; // jump to step 2 if fileID is available
 			}
 		}
 		
+		// Skip to Job Execution step if task is already running
+		$task_is_running = False;
+		if($data['runningTask'])
+		{
+			$data['wizard_jump_to'] = 4;
+			$task_is_running = True;
+		}
+		
+		//~ $data['wizard_jump_to'] = 5;
+		
 		$data['type']      = 'laser';
+		$data['type_label'] = 'Engraving';
+		
+		//~ $data['z_height_values'] = array('0.1' => '0.1', '0.01' => '0.01');
+		
 		// select_file
 		$data['get_files_url'] = plugin_url('getFiles');
 		$data['get_reacent_url'] = plugin_url('getRecentFiles');
+		
 		// task_wizard
 		$data['start_task_url'] = plugin_url('startTask');
+		
 		// jog_setup
 		$data['jog_message'] = 'Position the laser point to the origin (bottom-left corner) of the drawing. Jog to desired XY position, press <i class="fa fa-bullseye"></i> and then press "Start" ';
 		$data['jog_image'] = plugin_assets_url('img/fabui_laser_02a.png');
 		$data['fourth_axis'] = False;
 		
+		// job_execute
+		$data['set_rpm_function'] = 'setLaserPWM';
+		$data['rpm_label'] = 'PWM';
+		//~ $data['rpm_message'] = 'PWM value set to:';
+		$data['rpm_min'] = 0;
+		$data['rpm_max'] = 255;
+		
+		// job finish
+		$data['z_height_save_message'] = "Z's height correction is <strong><span class=\"z-height\"></span></strong>, do you want to save it and override the value for the next engraving?";
+		$data['task_jump_restart'] = 3;
+		
 		$data['steps'] = array(
 				array('number'  => 1,
 				 'title'   => 'Choose File',
 				 'content' => $this->load->view( plugin_url('std/select_file'), $data, true ),
-				 'active'  => !$file_is_ok
+				 'active'  => !$file_is_ok && !$task_is_running
 			    ),
 				array('number'  => 2,
 				 'title'   => 'Safety',
 				 'content' => $this->load->view( plugin_url('make/wizard/safety'), $data, true ),
-				 'active'  => $file_is_ok
-				 
+				 'active'  => $file_is_ok && !$task_is_running
 			    ),
 				array('number'  => 3,
 				 'title'   => 'Get Ready',
@@ -102,11 +130,12 @@ class Plugin_fab_laser extends FAB_Controller {
 			    ),
 				array('number'  => 4,
 				 'title'   => 'Laser Engraving',
-				 'content' => ''
+				 'content' => $this->load->view( plugin_url('std/task_execute'), $data, true ),
+				 'active' => $task_is_running
 			    ),
 				array('number'  => 5,
 				 'title'   => 'Finish',
-				 'content' => '',
+				 'content' => $this->load->view( plugin_url('std/task_finished'), $data, true )
 			    )
 			);
 		
@@ -124,22 +153,30 @@ class Plugin_fab_laser extends FAB_Controller {
 
 		$this->addCssFile(plugin_assets_url('css/select_file.css'));
 
-		if(!$this->runningTask){ //if task is running these filee are not needed
-			$this->addJSFile('/assets/js/plugin/datatables/jquery.dataTables.min.js'); //datatable
-			$this->addJSFile('/assets/js/plugin/datatables/dataTables.colVis.min.js'); //datatable
-			$this->addJSFile('/assets/js/plugin/datatables/dataTables.tableTools.min.js'); //datatable
-			$this->addJSFile('/assets/js/plugin/datatables/dataTables.bootstrap.min.js'); //datatable
-			$this->addJSFile('/assets/js/plugin/datatable-responsive/datatables.responsive.min.js'); //datatable */
-		}
+		$this->addJSFile('/assets/js/plugin/datatables/jquery.dataTables.min.js'); //datatable
+		$this->addJSFile('/assets/js/plugin/datatables/dataTables.colVis.min.js'); //datatable
+		$this->addJSFile('/assets/js/plugin/datatables/dataTables.tableTools.min.js'); //datatable
+		$this->addJSFile('/assets/js/plugin/datatables/dataTables.bootstrap.min.js'); //datatable
+		$this->addJSFile('/assets/js/plugin/datatable-responsive/datatables.responsive.min.js'); //datatable */
+		
+		$this->addJSFile('/assets/js/plugin/flot/jquery.flot.cust.min.js'); 
+		$this->addJSFile('/assets/js/plugin/flot/jquery.flot.resize.min.js');
+		$this->addJSFile('/assets/js/plugin/flot/jquery.flot.fillbetween.min.js');
+		$this->addJSFile('/assets/js/plugin/flot/jquery.flot.time.min.js');
+		$this->addJSFile('/assets/js/plugin/flot/jquery.flot.tooltip.min.js');
 
 		$this->addJsInLine($this->load->view( plugin_url('make/js'), $data, true));
+
 		$this->addJSFile('/assets/js/plugin/fuelux/wizard/wizard.min.old.js'); //wizard
-		
 		$this->addJsInLine($this->load->view( plugin_url('std/task_wizard_js'), $data, true));
+		
 		$this->addJsInLine($this->load->view( plugin_url('std/select_file_js'), $data, true));
 		
 		$this->addJSFile('/assets/js/plugin/knob/jquery.knob.min.js');
 		$this->addJsInLine($this->load->view( plugin_url('std/jog_setup_js'), $data, true));
+		
+		$this->addJsInLine($this->load->view( plugin_url('std/task_execute_js'), $data, true));
+		$this->addJsInLine($this->load->view( plugin_url('std/task_finished_js'), $data, true));
 		
 		$this->content = $widget->print_html(true);
 		$this->view();
@@ -369,6 +406,7 @@ class Plugin_fab_laser extends FAB_Controller {
 	
 	public function generateGCode($fileId)
 	{
+		$this->load->helper('plugin_helper');
 		$this->load->model('Files', 'files');
 		$file = $this->files->get($fileId, 1);
 
@@ -377,8 +415,6 @@ class Plugin_fab_laser extends FAB_Controller {
 		if($file)
 		{
 			$postData = $this->input->post();
-			
-			$this->load->helper('plugin_helper');
 
 			$params = array(
 				$postData['profile'],
@@ -408,6 +444,36 @@ class Plugin_fab_laser extends FAB_Controller {
 	
 	public function startTask()
 	{
+		//load helpers
+		$this->load->helpers('fabtotum_helper');
+		$this->load->helper('plugin_helper');
+		$this->load->model('Files', 'files');
+		
+		$data = $this->input->post();
+		
+		$fileToCreate = $this->files->get($data['idFile'], 1);
+		
+		resetTaskMonitor();
+		resetTrace('Please wait...');
+		
+		//get object record
+		$object = $this->files->getObject($fileToCreate['id']);
+		
+		//add record to DB
+		$this->load->model('Tasks', 'tasks');
+		$taskData = array(
+			'user'       => $this->session->user['id'],
+			'controller' => 'plugin',
+			'type'       => 'fab_laser',
+			'status'     => 'running',
+			'id_file'    => $data['idFile'],
+			'id_object'  => $object['id'],
+			'start_date' => date('Y-m-d H:i:s')
+		);
+		$taskId   = $this->tasks->add($taskData);
+		//$taskId = 0;
+		//$userID   = $this->session->user['id'];
+		
 		$response = array(
 			'start' => false, 
 			'message' => 'Task Not Implemented yet.', 
@@ -416,6 +482,15 @@ class Plugin_fab_laser extends FAB_Controller {
 			);
 		
 		$response['start'] = true;
+		$response['id_task'] = $taskId;
+		
+		//start print
+		$params = array(
+			'-T' => $taskId, 
+			'-F' => $fileToCreate['full_path']
+		);
+		
+		startPluginPyScript('engrave.py', $params, true);
 		
 		$this->output->set_content_type('application/json')->set_output(json_encode($response));
 	}

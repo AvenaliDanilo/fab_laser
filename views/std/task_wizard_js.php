@@ -38,9 +38,9 @@
 			}
 		});
 		
-		<?php if(isset($fileid_jump_to)): ?>
+		<?php if(isset($wizard_jump_to)): ?>
 			$('.wizard').wizard('selectedItem', {
-				step: <?php echo $fileid_jump_to?>
+				step: <?php echo $wizard_jump_to?>
 			});
 			enableButton('.btn-prev');
 		<?php endif; ?>
@@ -63,5 +63,18 @@
 		return false;
 	}
 	
+	function gotoWizardStep(step)
+	{
+		$('.wizard').wizard('selectedItem', { step: step });
+	}
+	
+	function gotoWizardFinish()
+	{
+		<?php if(isset($wizard_finish)): ?>
+			$('.wizard').wizard('selectedItem', { step: <?php echo $wizard_finish; ?> });
+		<?php else: ?>
+			$('.wizard').wizard('selectedItem', { step: <?php echo end($steps)['number']; ?> });
+		<?php endif; ?>
+	}
 	
 </script>
