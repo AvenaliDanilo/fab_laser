@@ -7,7 +7,14 @@
  * @license https://opensource.org/licenses/GPL-3.0
  * 
  */
- 
+
+/* variable initialization */
+
+if(!isset($extruder_min)) 	$extruder_min = 0;
+if(!isset($extruder_max)) 	$extruder_max = 250;
+if(!isset($bed_min)) 		$bed_min = 10;
+if(!isset($bed_max)) 		$bed_max = 100;
+
 ?>
 <script type="text/javascript">
 	
@@ -62,9 +69,9 @@
 		//extruder target
 		if(typeof extruderSlider == "undefined")
 			noUiSlider.create(document.getElementById('create-ext-target-slider'), {
-				start: typeof (Storage) !== "undefined" ? localStorage.getItem("nozzle_temp_target") : <?php echo isset($extruder_min) ? $extruder_min : 0; ?>,
+				start: typeof (Storage) !== "undefined" ? localStorage.getItem("nozzle_temp_target") : <?php echo $extruder_min; ?>,
 				connect: "lower",
-				range: {'min': <?php echo isset($extruder_min) ? $extruder_min : 0; ?>, 'max' : <?php echo isset($extruder_max) ? $extruder_max : 250; ?>},
+				range: {'min': <?php echo isset($extruder_min) ? $extruder_min : 0; ?>, 'max' : <?php echo $extruder_max; ?>},
 				pips: {
 					mode: 'values',
 					values: [0, 175, 250],
@@ -79,7 +86,7 @@
 			noUiSlider.create(document.getElementById('create-bed-target-slider'), {
 				start: typeof (Storage) !== "undefined" ? localStorage.getItem("bed_temp_target") : 0,
 				connect: "lower",
-				range: {'min': 10, 'max' : 100},
+				range: {'min': <?php echo $bed_min; ?>, 'max' : <?php echo $bed_max; ?>},
 				pips: {
 					mode: 'positions',
 					values: [0,25,50,75,100],
@@ -657,7 +664,6 @@
 		
 		
 		<?php if($type=="print"): ?>
-		//~ setTimeout(initGraph,    1000);
 		initGraph();
 		<?php endif; ?>
 		traceMonitor();

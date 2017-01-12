@@ -83,7 +83,7 @@ class Plugin_fab_laser extends FAB_Controller {
 			$task_is_running = True;
 		}
 		
-		//~ $data['wizard_jump_to'] = 5;
+		$data['wizard_jump_to'] = 3;
 		
 		$data['type']      = 'laser';
 		$data['type_label'] = 'Engraving';
@@ -152,6 +152,8 @@ class Plugin_fab_laser extends FAB_Controller {
 		$widget->body   = array('content' => $this->load->view(plugin_url('std/task_wizard'), $data, true ), 'class'=>'fuelux', 'footer'=>$widgeFooterButtons);
 
 		$this->addCssFile(plugin_assets_url('css/select_file.css'));
+		$this->addCssFile(plugin_assets_url('css/jog_setup.css'));
+		$this->addCssFile(plugin_assets_url('css/jogtouch.css'));
 
 		$this->addJSFile('/assets/js/plugin/datatables/jquery.dataTables.min.js'); //datatable
 		$this->addJSFile('/assets/js/plugin/datatables/dataTables.colVis.min.js'); //datatable
@@ -166,6 +168,8 @@ class Plugin_fab_laser extends FAB_Controller {
 		$this->addJSFile('/assets/js/plugin/flot/jquery.flot.tooltip.min.js');
 
 		$this->addJsInLine($this->load->view( plugin_url('make/js'), $data, true));
+
+		$this->addJSFile( plugin_assets_url('js/jogtouch.js') ); //jog touch
 
 		$this->addJSFile('/assets/js/plugin/fuelux/wizard/wizard.min.old.js'); //wizard
 		$this->addJsInLine($this->load->view( plugin_url('std/task_wizard_js'), $data, true));

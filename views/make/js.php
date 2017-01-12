@@ -15,6 +15,8 @@
 	
 	$(document).ready(function() {
 		$('#understandSafety').on('click', understandSafety);
+		
+		$('[data-toggle="tooltip"]').tooltip();
 	});
 
 	/**

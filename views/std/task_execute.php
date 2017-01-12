@@ -59,7 +59,7 @@
 				</div>
 
 				<div class="row">
-					<div id="temperatures-chart" class="chart"> </div>			
+					<div id="temperatures-chart" class="chart"> </div>
 				</div>
 			</div>
 			<?php endif; ?>

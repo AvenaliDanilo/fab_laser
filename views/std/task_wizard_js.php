@@ -7,6 +7,10 @@
  * 
  */
 
+/* variable initialization */
+
+if( !isset($wizard_finish) ) $wizard_finish = end($steps)['number'];
+
 ?>
 <script type="text/javascript">
 
@@ -70,11 +74,7 @@
 	
 	function gotoWizardFinish()
 	{
-		<?php if(isset($wizard_finish)): ?>
-			$('.wizard').wizard('selectedItem', { step: <?php echo $wizard_finish; ?> });
-		<?php else: ?>
-			$('.wizard').wizard('selectedItem', { step: <?php echo end($steps)['number']; ?> });
-		<?php endif; ?>
+		$('.wizard').wizard('selectedItem', { step: <?php echo $wizard_finish; ?> });
 	}
 	
 </script>

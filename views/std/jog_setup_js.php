@@ -31,6 +31,23 @@
 				rotation($(this).val());
 			}
 		 });
+		 
+		 var options = {
+			guides: false,
+			center: false,
+			highlight: false,
+			background: false,
+			disabled: true,
+			
+		 };
+		 
+		 var touch =  $('.bed-image').jogtouch(options);
+		 
+		 $('.touch-home-xy').on('click', function(e) {
+			 touch.jogtouch('enable');
+			 $('.button_container').slideUp();
+			 return false;
+		 });
 	});
 	
 	function rotation(value)
