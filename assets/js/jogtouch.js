@@ -1,3 +1,14 @@
+/*!
+ * JogTouch v1.0
+ * 
+ * Author: Daniel Kesler <kesler.daniel@gmail.com>
+ *
+ * Copyright (c) 2014-2016 FABtotum
+ * Released under the GPLv3 license
+ *
+ * Date: 2017-01-17
+ */
+
 (function (factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as anonymous module.
@@ -46,6 +57,7 @@
   var EVENT_RESIZE = 'resize.' + NAMESPACE; // Bind to window with namespace
   var EVENT_BUILD = 'build.' + NAMESPACE;
   var EVENT_BUILT = 'built.' + NAMESPACE;
+  var EVENT_TOUCH = 'touch.' + NAMESPACE;
   
   // Supports
   var SUPPORT_CANVAS = $.isFunction($('<canvas>')[0].getContext);
@@ -136,6 +148,8 @@
     this.$element = $(element);
     this.options = $.extend({}, JogTouch.DEFAULTS, $.isPlainObject(options) && options);
     this.isBuilt = false;
+    this.cursorX = 0;
+    this.cursorY = 0;
     this.isLoaded = false;
     this.isDisabled = false;
     this.isImg = false;
@@ -172,6 +186,15 @@
       this.start();
     },
     
+    // A shortcut for triggering custom events
+    trigger: function (type, data) {
+      var e = $.Event(type, data);
+
+      this.$element.trigger(e);
+
+      return e;
+    },
+    
     start: function () {
       var $image = this.$element;
       var $clone = this.$clone;
@@ -198,6 +221,47 @@
     stop: function () {
       this.$clone.remove();
       this.$clone = null;
+    },
+    
+    cursor: function(x, y) {
+      var options = this.options;
+      var canvas = this.canvas;
+      
+      var width = this.$canvas.width();
+      var height = this.$canvas.height();
+      
+      var max_x = Math.max(options.left, options.right);
+      var min_x = Math.min(options.left, options.right);
+      var max_y = Math.max(options.top, options.bottom);
+      var min_y = Math.min(options.top, options.bottom);
+      
+      var mx = Math.max(x, min_x);
+      var my = Math.max(y, min_y);
+      
+      mx = Math.min(x, max_x);
+      my = Math.min(y, max_y);
+      
+      this.cursorX = mx;
+      this.cursorY = my;
+      
+      var mappedWidth = options.right - options.left;
+      var mappedX = options.left;
+      var mappedHeight = options.bottom - options.top;
+      var mappedY = options.top;
+      
+      var px = mx / mappedWidth;
+      var py = my / mappedHeight;
+      
+      var rx = width * px;
+      var ry = height + height * py;
+      
+      // move the cursor
+      this.$cross.css(
+        {
+          left:rx-8,
+          top:ry-8
+        }
+      );
     },
     
     touch: function(event) {
@@ -230,18 +294,46 @@
       this.touchX = e.pageX || originalEvent && originalEvent.pageX;
       this.touchY = e.pageY || originalEvent && originalEvent.pageY;
       
-      var offset = this.$jogtouch.offset();
       var offset2 = this.$canvas.offset();
+      var width = this.$canvas.width();
+      var height = this.$canvas.height();
       
-      console.log('== Touch', this.touchX, this.touchY, canvas, offset, offset2);
+      var rx = this.touchX-offset2.left;
+      var ry = this.touchY-offset2.top;
       
-      this.$cross.css(
-        {
-          left:this.touchX-offset2.left-8,
-          top:this.touchY-offset2.top-8
-        }
-      );
+      rx = Math.max(rx, 0);
+      ry = Math.max(ry, 0);
       
+      rx = Math.min(rx, width);
+      ry = Math.min(ry, height);
+      
+      var px = rx / width;
+      var py = ry / height;
+      
+      // move the cursor
+      //~ this.$cross.css(
+        //~ {
+          //~ left:rx-8,
+          //~ top:ry-8
+        //~ }
+      //~ );
+      
+      
+      // trigger touch event with mapped coordinates
+      
+      var mappedWidth = options.right - options.left;
+      var mappedX = options.left;
+      var mappedHeight = options.bottom - options.top;
+      var mappedY = options.top;
+      
+      var data = {
+        x: mappedX + px*mappedWidth,
+        y: mappedY + py*mappedHeight
+      };
+      
+      this.cursor(data.x, data.y);
+      
+      this.trigger(EVENT_TOUCH, data);
     },
         
     build: function () {
@@ -257,10 +349,10 @@
         this.unbuild();
       }
 
-      // Create cropper elements
+      // Create jogtouch elements
       this.$container = $this.parent();
       this.$jogtouch = $jogtouch = $(JogTouch.TEMPLATE);
-      this.$canvas = $jogtouch.find('.jogtouch-canvas').append($clone);
+      this.$canvas = $jogtouch.find('.jogtouch-canvas');
       this.$cross = $jogtouch.find('.jogtouch-cross');
       this.$face = $face = $jogtouch.find('.jogtouch-face');
 
@@ -290,6 +382,8 @@
         $jogtouch.addClass(CLASS_DISABLED);
       }
       
+      this.cursorX = options.cursorX;
+      this.cursorY = options.cursorY;
       this.bind();
       this.initContainer();
       this.initCanvas();
@@ -308,6 +402,10 @@
       $jogtouch.on(EVENT_MOUSE_DOWN, $.proxy(this.touch, this));
 
       /*$document.on(EVENT_MOUSE_MOVE, (this._move = proxy(this.move, this))).*/
+
+      if ($.isFunction(options.touch)) {
+        $this.on(EVENT_TOUCH, options.touch);
+      }
 
       $window.on(EVENT_RESIZE, (this._resize = proxy(this.resize, this)));
     },
@@ -346,7 +444,7 @@
       
     },
     
-    // Enable (unfreeze) the cropper
+    // Enable (unfreeze) the jogtouch
     enable: function () {
       if (this.isBuilt) {
         this.isDisabled = false;
@@ -354,7 +452,7 @@
       }
     },
 
-    // Disable (freeze) the cropper
+    // Disable (freeze) the jogtouch
     disable: function () {
       if (this.isBuilt) {
         this.isDisabled = true;
@@ -387,6 +485,7 @@
     
     // Canvas (image wrapper)
     initCanvas: function () {
+      var options = this.options;
       var container = this.container;
       var containerWidth = container.width;
       var containerHeight = container.height;
@@ -412,7 +511,8 @@
       canvas.oldLeft = canvas.left = (containerWidth - canvasWidth) / 2;
       canvas.oldTop = canvas.top = (containerHeight - canvasHeight) / 2;
 
-      this.canvas = canvas;
+      this.canvas = canvas;      
+      this.cursor(this.cursorX, this.cursorY);
     },
     
   }
@@ -432,6 +532,16 @@
     
     // Initialize disabled jogtouch
     disabled: false,
+    
+    left: 0,
+    right: 100,
+    top: 0,
+    bottom: 100,
+    
+    cursorX: 0,
+    cursorY: 0,
+    
+    touch: null
   };
   
   JogTouch.TEMPLATE = (

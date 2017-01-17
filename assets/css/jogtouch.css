@@ -163,6 +163,8 @@
   left: 0;
 
   background-color: #fff;
+  
+  cursor: crosshair;
 }
 
 .jogtouch-invisible {

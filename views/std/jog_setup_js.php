@@ -39,6 +39,14 @@
 			background: false,
 			disabled: true,
 			
+			left:0.0,
+			right:214.0,
+			top:234.0,
+			bottom:0.0,
+			
+			touch: function(e) {
+				console.log(e.x, e.y);
+			}
 		 };
 		 
 		 var touch =  $('.bed-image').jogtouch(options);
