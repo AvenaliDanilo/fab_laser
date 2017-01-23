@@ -107,6 +107,7 @@
 	
 	function jogAction(e)
 	{
+		console.log("== jog_busy", jog_busy);
 		if(jog_busy)
 			return false;
 		
@@ -174,9 +175,11 @@
 			//fabApp.jogMdi(cmd);
 			
 			jog_busy = true;
+			console.log("== jog_busy set to BUSY", jog_busy);
 			wsApp.jogMdi(cmd, function(e) {
 				console.log("wsApp, COMMAND COMPLETED", e);
 				jog_busy = false;
+				console.log("== jog_busy set to READY", jog_busy);
 				});
 			
 			/*fabApp.jogMdi(cmd, function(e) {

@@ -528,12 +528,51 @@ class Plugin_fab_laser extends FAB_Controller {
 
 	public function ws_fallback()
 	{
-		$response['type'] = 'debug';
-		$response['data'] = array(
-			'message' => 'this is websocket fallback',
-			'method' => $this->input->method(true),
-			'data-get' => $this->input->get(),
-			'data-post' => $this->input->post() );
+		$method = $this->input->method(true);
+		
+		$response = array("type" => "unknown", "data" => "");
+
+		if($method == "GET")
+		{
+			/*$request = $this->input->get();
+			$requestData = json_decode($request, true);*/
+			
+		} 
+		else if($method == "POST")
+		{
+			$request = $this->input->post("data");
+			$requestData = json_decode($request, true);
+
+			if(isset($requestData['function'])){
+				$function       = $requestData['function'];
+				$functionParams = isset($requestData['params']) ? $requestData['params'] : '';
+				
+				switch($function)
+				{
+					case "serial": {
+						$this->load->library('JogFactory', '', 'jogFactory');
+						$jogFactory = $this->jogFactory;
+						
+						$method      = $functionParams['method'];
+						$methodParam = $functionParams['value'];
+						$methodStamp = $functionParams['stamp'];
+						
+						/*unset($data['method']);
+						unset($data['value']);
+						unset($data['stamp']);*/
+						
+						if(method_exists($jogFactory, $method)){ //if method exists than do it
+							$response['data'] = $jogFactory = $this->jogFactory->$method($methodParam, $methodStamp);
+							$response['type'] = 'jog';
+						}
+					}
+					break;
+					
+					
+				}
+			}
+			
+		}
 		
 		$this->output->set_content_type('application/json')->set_output(json_encode($response));
 	}

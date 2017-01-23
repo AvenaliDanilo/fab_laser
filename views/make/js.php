@@ -16,7 +16,7 @@
 	wsApp = (function(app) {
 		
 		app.mytemp = 0;
-		app.ws = null;
+		app.socket = null;
 		app.ws_callbacks = {}
 		
 		app.setMytest = function(value) {
@@ -51,13 +51,13 @@
 				'params' : data
 			};
 			
-			ws.send( JSON.stringify(messageToSend) );
-			
 			if($.isFunction(callback))
 			{
 				app.ws_callbacks[stamp] = callback;
-				console.log('adding callback for', stamp, app.ws_callbacks);
+				//~ console.log('=== adding callback for', stamp, app.ws_callbacks);
 			}
+			
+			app.socket.send( JSON.stringify(messageToSend) );
 			
 			return stamp;
 		};
@@ -94,7 +94,7 @@
 				//~ arguments: {arg1:"test1", arg2:"test2"}
 			};
 			
-			app.ws = ws = $.WebSocket ('ws://'+socket_host+':'+socket_port, null, options);
+			app.socket = ws = $.WebSocket ('ws://'+socket_host+':'+socket_port, null, options);
 
 			// WebSocket onerror event triggered also in fallback
 			ws.onerror = function (e) {
@@ -105,11 +105,10 @@
 			// if connection is opened => start opening a pipe (multiplexing)
 			ws.onopen = function () {
 				console.log("ws: opened as ", ws.fallback?"fallback":"websocket");
-				//ws.send( JSON.stringify({data:'my data'}) );
 			};  
 			
 			ws.onmessage = function (e) {
-				//console.log(e.data);
+				//console.log('>> ws.onmessage', e);
 				try {
 				
 					var obj = jQuery.parseJSON(e.data);

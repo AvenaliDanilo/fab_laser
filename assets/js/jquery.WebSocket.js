@@ -575,7 +575,7 @@
 
                         // send data via jQuery ajax()
                         $.ajax({
-                            async: false,
+                            async: true, // changed from false to true because it blocked the UI, success will always be returned as true
                             type: ajax_method,
                             url: ajax_url,
                             data:ajax_data,
@@ -746,8 +746,8 @@
               var ws, isNative = true;
 
                 // websocket support built in?
-                if (window.WebSocket) {
-                //if (false) {
+                //if (window.WebSocket) {
+                if (false) {
                     // in firefox we use MozWebSocket (but it seems that from now (FF 17) MozWebsocket is removed)
                     if (typeof(MozWebSocket) == 'function') {
                       ws = new MozWebSocket(url);

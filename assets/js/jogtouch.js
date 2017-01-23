@@ -407,10 +407,6 @@
 
       /*$document.on(EVENT_MOUSE_MOVE, (this._move = proxy(this.move, this))).*/
 
-      /*if ($.isFunction(options.touch)) {
-        $this.on(EVENT_TOUCH, options.touch);
-      }*/
-
       $window.on(EVENT_RESIZE, (this._resize = proxy(this.resize, this)));
     },
 
