@@ -154,6 +154,7 @@ class Plugin_fab_laser extends FAB_Controller {
 		$this->addCssFile(plugin_assets_url('css/select_file.css'));
 		$this->addCssFile(plugin_assets_url('css/jog_setup.css'));
 		$this->addCssFile(plugin_assets_url('css/jogtouch.css'));
+		$this->addCssFile(plugin_assets_url('css/jogcontrols.css'));
 
 		$this->addJSFile('/assets/js/plugin/datatables/jquery.dataTables.min.js'); //datatable
 		$this->addJSFile('/assets/js/plugin/datatables/dataTables.colVis.min.js'); //datatable
@@ -170,6 +171,12 @@ class Plugin_fab_laser extends FAB_Controller {
 		$this->addJsInLine($this->load->view( plugin_url('make/js'), $data, true));
 
 		$this->addJSFile( plugin_assets_url('js/jogtouch.js') ); //jog touch
+		$this->addJSFile( plugin_assets_url('js/raphael.min.js') ); //vector library
+		$this->addJSFile( plugin_assets_url('js/modernizr-touch.js') ); //touch device detection
+		$this->addJSFile( plugin_assets_url('js/jogcontrols.js') ); //jog controls
+		
+		$this->addJSFile( plugin_assets_url('js/jquery.WebSocket.js') );
+		$this->addJSFile( plugin_assets_url('js/jquery.xmlrpc.min.js') );
 
 		$this->addJSFile('/assets/js/plugin/fuelux/wizard/wizard.min.old.js'); //wizard
 		$this->addJsInLine($this->load->view( plugin_url('std/task_wizard_js'), $data, true));
@@ -312,6 +319,26 @@ class Plugin_fab_laser extends FAB_Controller {
 	public function test()
 	{
 		$this->output->set_content_type('application/json')->set_output(json_encode(array(true)));
+	}
+	
+	public function std_jog()
+	{
+		$data = $this->input->post();
+		$this->load->helper('fabtotum_helper');
+		
+		$reply = array();
+		$codes = $data['codes'];
+		
+		foreach($codes as $code)
+		{
+			$responseTemp = sendToXmlrpcServer('send', $code);
+			$reply[] = $responseTemp['reply'];
+		}
+		
+		//$code = 'G28 X Y';
+		//$responseTemp = sendToXmlrpcServer('send', $code);
+		
+		$this->output->set_content_type('application/json')->set_output(json_encode($reply));
 	}
 	
 	public function modifyPreset($action, $preset = '')
@@ -495,6 +522,18 @@ class Plugin_fab_laser extends FAB_Controller {
 		);
 		
 		startPluginPyScript('engrave.py', $params, true);
+		
+		$this->output->set_content_type('application/json')->set_output(json_encode($response));
+	}
+
+	public function ws_fallback()
+	{
+		$response['type'] = 'debug';
+		$response['data'] = array(
+			'message' => 'this is websocket fallback',
+			'method' => $this->input->method(true),
+			'data-get' => $this->input->get(),
+			'data-post' => $this->input->post() );
 		
 		$this->output->set_content_type('application/json')->set_output(json_encode($response));
 	}

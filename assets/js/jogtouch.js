@@ -245,12 +245,17 @@
       this.cursorY = my;
       
       var mappedWidth = options.right - options.left;
-      var mappedX = options.left;
+      var mappedX1 = options.left;
+      var mappedX2 = options.right;
       var mappedHeight = options.bottom - options.top;
-      var mappedY = options.top;
+      var mappedY1 = options.top;
+      var mappedY2 = options.bottom;
       
-      var px = mx / mappedWidth;
-      var py = my / mappedHeight;
+      var offX = Math.min(mappedX1, mappedX2)
+      var offY = Math.min(mappedY1, mappedY2)
+      
+      var px = (mx-offX) / mappedWidth;
+      var py = (my-offY) / mappedHeight;
       
       var rx = width * px;
       var ry = height + height * py;
@@ -308,16 +313,7 @@
       ry = Math.min(ry, height);
       
       var px = rx / width;
-      var py = ry / height;
-      
-      // move the cursor
-      //~ this.$cross.css(
-        //~ {
-          //~ left:rx-8,
-          //~ top:ry-8
-        //~ }
-      //~ );
-      
+      var py = ry / height;      
       
       // trigger touch event with mapped coordinates
       
@@ -331,9 +327,17 @@
         y: mappedY + py*mappedHeight
       };
       
-      this.cursor(data.x, data.y);
+      var execute = true;
+      if(options.touch)
+      {
+        execute = options.touch(data);
+      }
       
-      this.trigger(EVENT_TOUCH, data);
+      if(execute)
+      {
+        this.cursor(data.x, data.y);
+        this.trigger(EVENT_TOUCH, data);
+      }
     },
         
     build: function () {
@@ -403,9 +407,9 @@
 
       /*$document.on(EVENT_MOUSE_MOVE, (this._move = proxy(this.move, this))).*/
 
-      if ($.isFunction(options.touch)) {
+      /*if ($.isFunction(options.touch)) {
         $this.on(EVENT_TOUCH, options.touch);
-      }
+      }*/
 
       $window.on(EVENT_RESIZE, (this._resize = proxy(this.resize, this)));
     },
@@ -430,9 +434,12 @@
       var ratio;
 
       // Check `container` is necessary for IE8
-      if (this.isDisabled || !container) {
+      /*if (this.isDisabled || !container) {
         return;
-      }
+      }*/
+
+      if( $container.width() < 100 )
+        return;
 
       ratio = $container.width() / container.width;
 

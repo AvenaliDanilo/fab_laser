@@ -178,6 +178,7 @@ if(!isset($bed_max)) 		$bed_max = 100;
 
 		<?php if($type == "mill" || $type == "laser"): ?>
 		if(typeof rpmSlider == "undefined")
+		{
 			noUiSlider.create(document.getElementById('create-rpm-slider'), {
 				start: <?php echo isset($rpm_min) ? $rpm_min : 6000; ?>,
 				connect: "lower",
@@ -188,8 +189,10 @@ if(!isset($bed_max)) 		$bed_max = 100;
 					density: 10,
 					format: wNumb({})
 				}
-		});
-		rpmSlider = document.getElementById('create-rpm-slider');
+			});
+			rpmSlider = document.getElementById('create-rpm-slider');
+		}
+		
 		rpmSlider.noUiSlider.on('change', function(e){
 			onChange('rpm', e);
 		});
@@ -208,6 +211,7 @@ if(!isset($bed_max)) 		$bed_max = 100;
 		
 		//speed slider
 		if(typeof speedSlider == "undefined")
+		{
 			noUiSlider.create(document.getElementById('create-speed-slider'), {
 				start: 100,
 				connect: "lower",
@@ -218,8 +222,9 @@ if(!isset($bed_max)) 		$bed_max = 100;
 					density: 10,
 					format: wNumb({})
 				}
-		});
-		speedSlider = document.getElementById('create-speed-slider');
+			});
+			speedSlider = document.getElementById('create-speed-slider');
+		}
 		//speed slider
 		speedSlider.noUiSlider.on('change', function(e){
 			onChange('speed', e);
