@@ -17,8 +17,8 @@
 
 	$(document).ready(function() {
 		
-		$(".axisxy").on('click', moveXYZ);
-		$(".axisz").on('click', moveXYZ);
+		//~ $(".axisxy").on('click', moveXYZ);
+		//~ $(".axisz").on('click', moveXYZ);
 		$(".setzero").on('click', jogSetAsZero);
 		
 		$('.knob').knob({
@@ -63,7 +63,7 @@
 					return false;
 					
 				touch_busy = true;
-				wsApp.jogMdi('G90\nG0 X'+x+' Y'+y+' F5000\nM400', function(e){
+				fabApp.jogMdi('G90\nG0 X'+x+' Y'+y+' F5000\nM400', function(e){
 					touch_busy = false;
 				});
 					
@@ -76,7 +76,7 @@
 		 $('.touch-home-xy').on('click', function(e) {
 			
 			$('.touch-home-xy').addClass('disabled');
-			wsApp.jogMdi('G28 X Y', function(e){
+			fabApp.jogMdi('G28 X Y', function(e){
 				unlock_touch();
 				});
 			return false;
@@ -172,83 +172,13 @@
 		if(cmd != '')
 		{
 			cmd += '\nM400';
-			//fabApp.jogMdi(cmd);
 			
 			jog_busy = true;
-			console.log("== jog_busy set to BUSY", jog_busy);
-			wsApp.jogMdi(cmd, function(e) {
-				console.log("wsApp, COMMAND COMPLETED", e);
+			fabApp.jogMdi(cmd, function(e) {
 				jog_busy = false;
-				console.log("== jog_busy set to READY", jog_busy);
-				});
-			
-			/*fabApp.jogMdi(cmd, function(e) {
-				//console.log('done');
-				});*/
-			
-			//~ var a = fabApp.getMytest();
-				
-			//~ console.log(a );
-			
-			//~ a++;
-			
-			//~ fabApp.setMytest(a);
-			
+			});
 		}
 		
-		return false;
-	}
-	
-	function moveXYZ()
-	{
-		var dir      = $(this).attr("data-attribue-direction");
-		var xystep   = $("#xy-step").val();
-		var zstep    = $("#z-step").val();
-		var feedrate = $("#feedrate").val();
-		var cmd      = '';
-		
-		switch(dir)
-		{
-			case "z-up":
-				cmd = 'G91\nG0 Z+'+zstep+' F'+feedrate;
-				break;
-			case "z-down":
-				cmd = 'G91\nG0 Z-'+zstep+' F'+feedrate;
-				break;
-			case "right":
-				cmd = 'G91\nG0 X+'+xystep+' F'+feedrate;
-				break;
-			case "left":
-				cmd = 'G91\nG0 X-'+xystep+' F'+feedrate;
-				break;
-			case "up":
-				cmd = 'G91\nG0 Y+'+xystep+' F'+feedrate;
-				break;
-			case "down":
-				cmd = 'G91\nG0 Y-'+xystep+' F'+feedrate;
-				break;
-			case "down-right":
-				cmd = 'G91\nG0 X+'+xystep+' Y-'+xystep+' F'+feedrate;
-				break;
-			case "up-right":
-				cmd = 'G91\nG0 X+'+xystep+' Y+'+xystep+' F'+feedrate;
-				break;
-			case "down-left":
-				cmd = 'G91\nG0 X-'+xystep+' Y-'+xystep+' F'+feedrate;
-				break;
-			case "up-left":
-				cmd = 'G91\nG0 X-'+xystep+' Y+'+xystep+' F'+feedrate;
-				break;
-		}
-		
-		if(cmd != '')
-		{
-			//fabApp.jogMdi(cmd);
-			//wsApp.send_xmlrpc('send', ['G91', 'G0 Z+'+zstep+' F'+feedrate])
-		}
-		
-		console.log('move_xyz', dir);
-		console.log('JOG', cmd);
 		return false;
 	}
 

@@ -423,8 +423,6 @@
     },
 
     resize: function () {
-      console.log('== Resize');
-
       var $container = this.$container;
       var container = this.container;
       var ratio;

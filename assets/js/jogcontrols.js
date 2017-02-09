@@ -1,3 +1,14 @@
+/*!
+ * JogTouch v1.0
+ * 
+ * Author: Daniel Kesler <kesler.daniel@gmail.com>
+ *
+ * Copyright (c) 2014-2016 FABtotum
+ * Released under the GPLv3 license
+ *
+ * Date: 2017-01-20
+ */
+
 (function (factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as anonymous module.
@@ -201,8 +212,6 @@
       var paper = this.paper;
       var ratio;
 
-      console.log('== resize', $container.width());
-
       if( $container.width() < 150 )
         return;
 
@@ -399,8 +408,6 @@
             
             $this.trigger(EVENT_CLICK, e);
           }
-          
-          console.log(action);
       }
       
       if (Modernizr.touchevents) {

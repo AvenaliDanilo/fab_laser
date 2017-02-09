@@ -25,7 +25,7 @@
 						<!-- <h1><span class="badge bg-color-blue txt-color-white">2</span></h1> -->
 						<div class="alert alert-warning" role="alert"><strong>Warning:</strong> You are about to start a manufacturing task involving the laser head.</div>
 						<p class="font-md text-left">
-						Make sure to follow the <a href="" class="no-ajax">safety guidelines</a>.
+						Make sure to follow the <a target="_blank" href="http://www.fabtotum.com/laser-head-safety-health-guidelines" class="no-ajax">safety guidelines</a>.
 						Verify that engraving or cutting the material poses no hazard.
 						Put the provided safety goggles now before continuing, make sure no one else can approach the  unit without proper safety goggles and being informed of the hazard.
 						Do not remove the goggles unless it's safe to do so. Wait for the procedure to end.

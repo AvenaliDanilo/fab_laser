@@ -3,14 +3,6 @@
     "hooks": [
         {
             "action" : "file-action",
-            "filetypes" : ["jpg", "jpeg", "png", "dxf"],
-            "printtypes" : [],
-            "title" : "Convert to GCode",
-            "icon" : "fa-retweet",
-            "url" : "plugin/fab_laser/convert/$1"
-        },
-        {
-            "action" : "file-action",
             "filetypes" : [],
             "printtypes" : ["laser"],
             "title" : "Engrave",
@@ -24,11 +16,6 @@
     "name": "Laser Utils", 
     "author": "FABteam", 
     "menu": {
-        "/fab_laser": {
-            "url": "plugin/fab_laser/convert", 
-            "icon": "fa-cube", 
-            "title": "Laser Utils"
-        },
         "/make/laser": {
             "title": "Laser",
             "icon": "fa-sun-o", 
@@ -36,7 +23,7 @@
         }
     }, 
     "plugin_uri": "https://github.com/FABtotum/fab_laser", 
-    "version": "1.0", 
+    "version": "0.10.0", 
     "plugin_slug": "fab_laser", 
-    "filetypes": ["jpg", "jpeg", "png", "dxf"]
+    "filetypes": []
 }

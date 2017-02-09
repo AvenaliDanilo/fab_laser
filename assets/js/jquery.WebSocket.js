@@ -746,7 +746,7 @@
               var ws, isNative = true;
 
                 // websocket support built in?
-                //if (window.WebSocket) {
+                //~ if (window.WebSocket) {
                 if (false) {
                     // in firefox we use MozWebSocket (but it seems that from now (FF 17) MozWebsocket is removed)
                     if (typeof(MozWebSocket) == 'function') {

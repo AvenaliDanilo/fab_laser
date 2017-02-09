@@ -14,7 +14,7 @@
 	<div class="col-sm-12">
 		<div class="well">
 			<div class="row">
-				<div class="col-sm-6">
+				<div class="col-sm-7">
 					<div class="text-center">
 						<div class="row">
 							<div class="col-sm-7">
@@ -36,37 +36,8 @@
 						</div>
 					</div>
 				</div>
-			    <div class="col-sm-6">
+			    <div class="col-sm-5">
 			        <div class="text-center">
-			            <!--div class="row">
-							<div class="col-sm-12">
-								<div class="smart-form">
-									<fieldset style="background: none !important;">
-										<div class="row">
-											<section class="col col-4">
-												<label class="label-mill text-center">XY Step (mm)</label>
-												<label class="input">
-													<input  type="number" id="xy-step" value="10" step="1" min="0" max="100">
-												</label>
-											</section>
-											<section class="col col-4">
-												<label class="label-mill text-center">Feedrate</label>
-												<label class="input">
-													<input  type="number" id="feedrate" value="1000" step="50" min="0" max="5000">
-												</label>
-											</section>
-											<section class="col col-4">
-												<label class="label-mill text-center">Z Step (mm)</label>
-												<label class="input"> 
-													<input type="number" id="z-step" value="5" step="1" min="0" max="100">
-												</label>
-											</section>
-										</div>
-									</fieldset>
-								</div>
-							</div>
-						</div-->
-						
 						<div class="row">
 							<div class="col-sm-12">
 
@@ -100,7 +71,7 @@
 														<section class="col col-4">
 															<label class="label-mill text-center">Z Step (mm)</label>
 															<label class="input"> 
-																<input type="number" id="z-step" value="5" step="1" min="0" max="100">
+																<input type="number" id="z-step" value="0.5" step="0.1" min="0" max="100">
 															</label>
 														</section>
 													</div>
