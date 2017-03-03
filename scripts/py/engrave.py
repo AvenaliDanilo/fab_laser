@@ -21,19 +21,15 @@
 # Import standard python module
 import argparse
 import time
-import gettext
 
 # Import external modules
 
 # Import internal modules
+from fabtotum.utils.translation import _, setLanguage
 from fabtotum.fabui.config  import ConfigService
 from fabtotum.fabui.gpusher import GCodePusher
 import fabtotum.fabui.macros.general as general_macros
 import fabtotum.fabui.macros.printing as print_macros
-
-# Set up message catalog access
-tr = gettext.translation('mill', 'locale', fallback=True)
-_ = tr.ugettext
 
 ################################################################################
 
@@ -42,28 +38,22 @@ class Application(GCodePusher):
     Milling application.
     """
     
-    def __init__(self, log_trace, monitor_file, standalone = False, autolevel = False, finalize = True):
-        super(Application, self).__init__(log_trace, monitor_file, use_stdout=standalone )
+    def __init__(self, standalone = False):
+        super(Application, self).__init__(use_stdout=standalone)
         self.standalone = standalone
-        self.autolevel = autolevel
-        self.finalize = finalize
-        
-    def progress_callback(self, percentage):
-        print "Progress", percentage
     
-    def task_finalize(self):                                                                                                                                                                                                                                                                                                                                                                  
-        if self.standalone or self.finalize:
-            if self.is_aborted():
-                self.set_task_status(GCodePusher.TASK_ABORTING)
-            else:
-                self.set_task_status(GCodePusher.TASK_COMPLETING)
-            
-            #~ self.exec_macro("end_subtractive")
-            
-            if self.is_aborted():
-                self.set_task_status(GCodePusher.TASK_ABORTED)
-            else:
-                self.set_task_status(GCodePusher.TASK_COMPLETED)
+    def task_finalize(self):
+        if self.is_aborted():
+            self.set_task_status(GCodePusher.TASK_ABORTING)
+        else:
+            self.set_task_status(GCodePusher.TASK_COMPLETING)
+        
+        if self.is_aborted():
+            self.exec_macro("end_engraving_aborted")
+            self.set_task_status(GCodePusher.TASK_ABORTED)
+        else:
+            self.exec_macro("end_engraving")
+            self.set_task_status(GCodePusher.TASK_COMPLETED)
         
         self.stop()
     
@@ -81,6 +71,7 @@ class Application(GCodePusher):
     def state_change_callback(self, state):
         if state == 'paused':
             self.trace( _("Engraving PAUSED") )
+            self.trace( _("Please wait until the buffered moves in totumduino are finished") )
         if state == 'resumed':
             self.trace( _("Engraving RESUMED") )
         if state == 'aborted':
@@ -96,12 +87,11 @@ class Application(GCodePusher):
         :type task_id: int
         """
 
-        self.prepare_task(task_id, task_type='fab_laser', task_controller='plugin', gcode_file=gcode_file)
+        self.prepare_task(task_id, task_type='laser', gcode_file=gcode_file)
         self.set_task_status(GCodePusher.TASK_RUNNING)
         
-        #if self.standalone:
-            #~ self.exec_macro("check_pre_print")
-            #self.exec_macro("start_subtractive")
+        if self.standalone:
+            self.exec_macro("start_engraving")
         
         self.send_file(gcode_file)
         
@@ -125,12 +115,8 @@ def main():
         standalone  = True
     else:
         standalone  = False
-        
-    autolevel       = False
-    monitor_file    = config.get('general', 'task_monitor')      # TASK MONITOR FILE (write stats & task info, es: temperatures, speed, etc
-    log_trace       = config.get('general', 'trace')        # TASK TRACE FILE 
 
-    app = Application(log_trace, monitor_file, standalone, autolevel)
+    app = Application(standalone)
 
     app.run(task_id, gcode_file)
     app.loop()

@@ -91,8 +91,8 @@ class Plugin_fab_laser extends FAB_Controller {
 		//~ $data['z_height_values'] = array('0.1' => '0.1', '0.01' => '0.01');
 		
 		// select_file
-		$data['get_files_url'] = plugin_url('getFiles');
-		$data['get_reacent_url'] = plugin_url('getRecentFiles');
+		$data['get_files_url'] = 'std/getFiles/laser';
+		$data['get_reacent_url'] = 'std/getRecentFiles/laser';
 		
 		// task_wizard
 		$data['start_task_url'] = plugin_url('startTask');
@@ -190,63 +190,6 @@ class Plugin_fab_laser extends FAB_Controller {
 		$this->view();
 	}
 	
-	/**
-	 * @param $data (list)
-	 * return array data for dataTable pluguin
-	 */
-	private function dataTableFormat($data)
-	{
-		//load text helper
-		$this->load->helper('text_helper');
-		$aaData = array();
-		foreach($data as $file){ 
-			$td0 = '<label class="radio"><input type="radio" name="create-file" value="'.$file['id_file'].'"><i></i></label>';
-			$td1 = '<i></i><span class="hidden-xs">'.$file['client_name'].'</span><span class="hidden-md hidden-sm hidden-lg">'.ellipsize($file['orig_name'], 35).'</span>';
-			$td2 = '<i class="fa fa-folder-open"></i> <span class="hidden-xs">'.$file['name'].'</span><span class="hidden-md hidden-sm hidden-lg">'.ellipsize($file['name'], 35).'</span>';
-			$td3 = $file['id_file'];
-			$td4 = $file['id_object'];
-			$aaData[] = array($td0, $td1, $td2, $td3, $td4);
-		}
-		return $aaData;
-	}
-	
-	/**
-	 * @param type (additive, subtractive)
-	 * @return json object for dataTables plugin
-	 * get all files
-	 */
-	public function getFiles()
-	{
-		//load libraries, models, helpers
-		$this->load->model('Files', 'files');
-		$files = $this->files->getForCreate( 'laser' );
-		$aaData = $this->dataTableFormat($files);
-		$this->output->set_content_type('application/json')->set_output(json_encode(array('aaData' => $aaData)));
-	}
-	
-	/**
-	 * @param type (additive, subtractive)
-	 * @return json object for dataTables plugin
-	 * get all files
-	 */
-	public function getImageFiles()
-	{
-		//load libraries, models, helpers
-		$this->load->model('Files', 'files');
-		$files = $this->files->getByExtension( array('.jpg', '.jpeg', '.png', '.dxf') );
-		$aaData = $this->dataTableFormat($files);
-		$this->output->set_content_type('application/json')->set_output(json_encode(array('aaData' => $aaData)));
-	}
-	
-	public function getRecentFiles($task_type = '')
-	{
-		//load libraries, models, helpers
-		$this->load->model('Tasks', 'tasks');
-		$files  = $this->tasks->getLastCreations($task_type);
-		$aaData = $this->dataTableFormat($files);
-		$this->output->set_content_type('application/json')->set_output(json_encode(array('aaData' => $aaData)));
-	}
-	
 	public function startTask()
 	{
 		//load helpers
@@ -258,8 +201,15 @@ class Plugin_fab_laser extends FAB_Controller {
 		
 		$fileToCreate = $this->files->get($data['idFile'], 1);
 		
+		//reset task monitor file
 		resetTaskMonitor();
-		resetTrace('Please wait...');
+		$startSubtractive = doMacro('start_engraving');
+		if($startSubtractive['response'] =! 'ok'){
+			$this->output->set_content_type('application/json')->set_output(json_encode(array('start' => false, 'message' => $startSubtractive['message'])));
+			return;
+		}
+		
+		resetTrace( _("Please wait...") );
 		
 		//get object record
 		$object = $this->files->getObject($fileToCreate['id']);
@@ -276,12 +226,10 @@ class Plugin_fab_laser extends FAB_Controller {
 			'start_date' => date('Y-m-d H:i:s')
 		);
 		$taskId   = $this->tasks->add($taskData);
-		//$taskId = 0;
-		//$userID   = $this->session->user['id'];
 		
 		$response = array(
 			'start' => false, 
-			'message' => 'Task Not Implemented yet.', 
+			'message' => _("Task Not Implemented yet."), 
 			'trace' => '', 
 			'error' => ''
 			);

@@ -1,2 +1,2 @@
 # FABtotum official laser plugin
-Laser Engraving utilities plugin.
+Extends Create and Projectmanager with support for laser engraving.
