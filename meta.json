@@ -14,7 +14,7 @@
     "icon": "icon-communication-143", 
     "author_uri": "mailto:dk@fabtotum.com", 
     "name": "Laser", 
-    "author": "Daniel Kesler - FABteam", 
+    "author": "FABteam", 
     "menu": {
         "/make/laser": {
             "title": "Laser",
