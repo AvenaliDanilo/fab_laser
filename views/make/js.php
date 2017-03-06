@@ -87,7 +87,7 @@
 	function startTask()
 	{
 		console.log('Starting task');
-		openWait('<i class="fa fa-spinner fa-spin "></i>' + "<?php echo _('Preparing {0}');?>".format("<?php echo _(ucfirst($type)); ?>"), "<?php echo _('Please wait');?>");
+		openWait('<i class="fa fa-spinner fa-spin "></i>' + "<?php echo _('Preparing {0}');?>".format("<?php echo _(ucfirst($type)); ?>"), _("Checking safety measures...") );
 		
 		var data = {
 			idFile:idFile
@@ -99,6 +99,7 @@
 			url: '<?php echo site_url($start_task_url); ?>',
 			dataType: 'json'
 		}).done(function(response) {
+			console.log('RESPONSE', response);
 			if(response.start == false){
 				$('.wizard').wizard('selectedItem', { step: 2 });
 				fabApp.showErrorAlert(response.message);

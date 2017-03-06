@@ -1,29 +1,29 @@
 {
-    "description": "Laser Engraving Utilities", 
+    "description": "Laser addon", 
     "hooks": [
         {
             "action" : "file-action",
             "filetypes" : [],
             "printtypes" : ["laser"],
             "title" : "Engrave",
-            "icon" : "fa-retweet",
+            "icon" : "icon-communication-143",
             "url" : "plugin/fab_laser/make/$1"
         }
     ], 
     "required_bundles": [], 
-    "icon": "", 
-    "author_uri": "www.fabtotum.com", 
-    "name": "Laser Utils", 
-    "author": "FABteam", 
+    "icon": "icon-communication-143", 
+    "author_uri": "mailto:dk@fabtotum.com", 
+    "name": "Laser", 
+    "author": "Daniel Kesler - FABteam", 
     "menu": {
         "/make/laser": {
             "title": "Laser",
-            "icon": "fa-sun-o", 
+            "icon": "icon-communication-143", 
             "url": "plugin/fab_laser/make"
         }
     }, 
     "plugin_uri": "https://github.com/FABtotum/fab_laser", 
-    "version": "0.10.0", 
+    "version": "0.10.2", 
     "plugin_slug": "fab_laser", 
     "filetypes": []
 }

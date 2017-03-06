@@ -54,6 +54,7 @@ class Plugin_fab_laser extends FAB_Controller {
 		$this->load->library('smart');
 		$this->load->helper('form');
 		$this->load->helper('fabtotum_helper');
+		$this->load->helper('utility_helper');
 		$this->load->helper('plugin_helper');
 		$this->load->model('Files', 'files');
 		
@@ -87,6 +88,12 @@ class Plugin_fab_laser extends FAB_Controller {
 		
 		$data['type']      = 'laser';
 		$data['type_label'] = 'Engraving';
+		
+		// Safety check
+		$data['safety_check'] = safetyCheck("laser", false);
+		$data['safety_check']['url'] = 'std/safetyCheck/laser/no';
+		$data['safety_check']['content'] = $this->load->view( 'std/task_safety_check', $data, true );
+		
 		
 		//~ $data['z_height_values'] = array('0.1' => '0.1', '0.01' => '0.01');
 		
@@ -149,7 +156,7 @@ class Plugin_fab_laser extends FAB_Controller {
 		$widget         = $this->smart->create_widget($widgetOptions);
 		$widget->id     = 'main-widget-make-laser';
 		$widget->header = array('icon' => 'fa-cube', "title" => "<h2>Laser Engraving</h2>");
-		$widget->body   = array('content' => $this->load->view(plugin_url('std/task_wizard'), $data, true ), 'class'=>'fuelux', 'footer'=>$widgeFooterButtons);
+		$widget->body   = array('content' => $this->load->view('std/task_wizard', $data, true ), 'class'=>'fuelux', 'footer'=>$widgeFooterButtons);
 
 		$this->addCssFile('/assets/css/std/select_file.css');
 		$this->addCssFile('/assets/css/std/jog_setup.css');
@@ -174,6 +181,8 @@ class Plugin_fab_laser extends FAB_Controller {
 		$this->addJSFile('/assets/js/std/modernizr-touch.js' ); //touch device detection
 		$this->addJSFile('/assets/js/std/jogcontrols.js' ); //jog controls
 		$this->addJSFile('/assets/js/std/jogtouch.js' ); //jog controls
+
+		$this->addJsInLine($this->load->view( 'std/task_safety_check_js', $data, true));
 
 		$this->addJSFile('/assets/js/plugin/fuelux/wizard/wizard.min.old.js'); //wizard
 		$this->addJsInLine($this->load->view( 'std/task_wizard_js', $data, true));
@@ -203,8 +212,17 @@ class Plugin_fab_laser extends FAB_Controller {
 		
 		//reset task monitor file
 		resetTaskMonitor();
+		
+		$checkResult = doMacro('check_engraving');
+		
+		if($checkResult['response'] != 'success')
+		{
+			$this->output->set_content_type('application/json')->set_output(json_encode(array('start' => false, 'message' => $checkResult['message'], 'response' => $checkResult['response'] )));
+			return;
+		}
+		
 		$startSubtractive = doMacro('start_engraving');
-		if($startSubtractive['response'] =! 'ok'){
+		if($startSubtractive['response'] != 'success'){
 			$this->output->set_content_type('application/json')->set_output(json_encode(array('start' => false, 'message' => $startSubtractive['message'])));
 			return;
 		}
@@ -213,6 +231,13 @@ class Plugin_fab_laser extends FAB_Controller {
 		
 		//get object record
 		$object = $this->files->getObject($fileToCreate['id']);
+
+		$response = array(
+			'start' => false, 
+			'message' => _("Task Not Implemented yet."), 
+			'trace' => '', 
+			'error' => ''
+			);
 		
 		//add record to DB
 		$this->load->model('Tasks', 'tasks');
@@ -226,13 +251,6 @@ class Plugin_fab_laser extends FAB_Controller {
 			'start_date' => date('Y-m-d H:i:s')
 		);
 		$taskId   = $this->tasks->add($taskData);
-		
-		$response = array(
-			'start' => false, 
-			'message' => _("Task Not Implemented yet."), 
-			'trace' => '', 
-			'error' => ''
-			);
 		
 		$response['start'] = true;
 		$response['id_task'] = $taskId;
