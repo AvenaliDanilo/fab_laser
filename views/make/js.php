@@ -19,6 +19,27 @@
 		$('[data-toggle="tooltip"]').tooltip();
 	});
 	
+	function handleStep()
+	{
+		var step = $('.wizard').wizard('selectedItem').step;
+		console.log('handleStep', step);
+		
+		if(step == 3)
+		{
+			<?php if($runningTask): ?>;
+			// do nothing
+			<?php else: ?>
+				cmd = 'M62';
+				fabApp.jogMdi(cmd);
+				startTask();
+				gotoWizardStep(4);
+			<?php endif; ?>
+			return false;
+		}
+		
+		return true;
+	}
+	
 	function checkWizard()
 	{
 		console.log('check Wizard');
@@ -26,61 +47,52 @@
 		console.log(step);
 		switch(step){
 			case 1: // Select file
-				disableButton('.btn-prev');
+				disableButton('.button-prev');
 				if(idFile)
-					enableButton('.btn-next');
+					enableButton('.button-next');
 				else
-					disableButton('.btn-next');
-				$('.btn-next').find('span').html('Next');
+					disableButton('.button-next');
+				$('.button-next').find('span').html('Next');
 				
 				cmd = 'M62';
 				fabApp.jogMdi(cmd);
-				
 				break;
+				
 			case 2: // Safety
-				enableButton('.btn-prev');
-				disableButton('.btn-next');
-				$('.btn-next').find('span').html('Next');
+				enableButton('.button-prev');
+				disableButton('.button-next');
+				$('.button-next').find('span').html('Next');
 				
 				cmd = 'M62';
 				fabApp.jogMdi(cmd);
-				
 				break;
+				
 			case 3: // Calibration
-				enableButton('.btn-prev');
-				disableButton('.btn-next');
-				$('.btn-next').find('span').html('Engrave');
+				enableButton('.button-prev');
+				disableButton('.button-next');
+				$('.button-next').find('span').html('Engrave');
 				
 				cmd = 'M60 S10\nM300\n';
 				fabApp.jogMdi(cmd);
-				
 				break;
+				
 			case 4: // Execution
-				<?php if($runningTask): ?>;
-				// do nothing
-				<?php else: ?>
-					cmd = 'M62';
-					fabApp.jogMdi(cmd);
-					startTask();
-				<?php endif; ?>
-				return false;
 				break;
-			case 5:
 				
-				$('.btn-next').find('span').html('');
+			case 5:
+				$('.button-next').find('span').html('');
 		}
 	}
 	
 	function jogSetAsZero()
 	{
-		console.log('set as zero');
-		enableButton('.btn-next');
+		enableButton('.button-next');
 		return false;
 	}
 	
 	function understandSafety()
 	{
-		enableButton('.btn-next');
+		enableButton('.button-next');
 		return false;
 	}
 	
@@ -99,9 +111,8 @@
 			url: '<?php echo site_url($start_task_url); ?>',
 			dataType: 'json'
 		}).done(function(response) {
-			console.log('RESPONSE', response);
 			if(response.start == false){
-				$('.wizard').wizard('selectedItem', { step: 2 });
+				gotoWizardStep(2);
 				fabApp.showErrorAlert(response.message);
 			}else{
 				
