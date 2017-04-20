@@ -104,13 +104,20 @@ def main():
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("-T", "--task-id",     help=_("Task ID."),      default=0)
     parser.add_argument("-F", "--file-name",   help=_("File name."),    required=True)
-
+    parser.add_argument("--lang",              help="Output language", default='en_US.UTF-8' )
+    parser.add_argument("--email",             help="Send an email on task finish", action='store_true', default=False)
+    parser.add_argument("--shutdown",          help="Shutdown on task finish", action='store_true', default=False )
+    
     # GET ARGUMENTS
     args = parser.parse_args()
 
     # INIT VARs
     gcode_file      = args.file_name     # GCODE FILE
     task_id         = args.task_id
+    lang            = args.lang
+    send_email      = bool(args.email)
+    auto_shutdown   = bool(args.shutdown)
+    
     if task_id == 0:
         standalone  = True
     else:

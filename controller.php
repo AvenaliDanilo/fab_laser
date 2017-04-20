@@ -49,7 +49,7 @@ class Plugin_fab_laser extends FAB_Controller {
 		$this->view();
 	}
 	
-	public function make($fileID = '')
+	public function make($fileID = '-1')
 	{
 		$this->load->library('smart');
 		$this->load->helper('form');
