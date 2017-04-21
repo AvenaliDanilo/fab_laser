@@ -90,9 +90,13 @@ class Plugin_fab_laser extends FAB_Controller {
 		$data['type_label'] = 'Engraving';
 		
 		// Safety check
-		$data['safety_check'] = safetyCheck("laser", false);
-		$data['safety_check']['url'] = 'std/safetyCheck/laser/no';
-		$data['safety_check']['content'] = $this->load->view( 'std/task_safety_check', $data, true );
+		if(!$task_is_running){
+			
+			$data['safety_check'] = safetyCheck("laser", false);
+			$data['safety_check']['url'] = 'std/safetyCheck/laser/no';
+			$data['safety_check']['content'] = $this->load->view( 'std/task_safety_check', $data, true );
+		}
+		
 		
 		
 		//~ $data['z_height_values'] = array('0.1' => '0.1', '0.01' => '0.01');
@@ -123,17 +127,17 @@ class Plugin_fab_laser extends FAB_Controller {
 		$data['steps'] = array(
 				array('number'  => 1,
 				 'title'   => 'Choose File',
-				 'content' => $this->load->view( 'std/select_file', $data, true ),
+				 'content' => !$task_is_running ? $this->load->view( 'std/select_file', $data, true ) : '',
 				 'active'  => !$file_is_ok && !$task_is_running
 			    ),
 				array('number'  => 2,
 				 'title'   => 'Safety',
-				 'content' => $this->load->view( plugin_url('make/wizard/safety'), $data, true ),
+				 'content' => !$task_is_running ? $this->load->view( plugin_url('make/wizard/safety'), $data, true ) : '',
 				 'active'  => $file_is_ok && !$task_is_running
 			    ),
 				array('number'  => 3,
 				 'title'   => 'Get Ready',
-				 'content' => $this->load->view( 'std/jog_setup', $data, true ),
+				 'content' => !$task_is_running ? $this->load->view( 'std/jog_setup', $data, true ) : '',
 			    ),
 				array('number'  => 4,
 				 'title'   => 'Laser Engraving',
@@ -156,42 +160,46 @@ class Plugin_fab_laser extends FAB_Controller {
 		$widget         = $this->smart->create_widget($widgetOptions);
 		$widget->id     = 'main-widget-make-laser';
 		$widget->header = array('icon' => 'fa-cube', "title" => "<h2>Laser Engraving</h2>");
-		$widget->body   = array('content' => $this->load->view('std/task_wizard', $data, true ), 'class'=>'fuelux', 'footer'=>$widgeFooterButtons);
-
-		$this->addCssFile('/assets/css/std/select_file.css');
-		$this->addCssFile('/assets/css/std/jog_setup.css');
-		$this->addCssFile('/assets/css/std/jogtouch.css');
-		$this->addCssFile('/assets/css/std/jogcontrols.css');
-
-		$this->addJSFile('/assets/js/plugin/datatables/jquery.dataTables.min.js'); //datatable
-		$this->addJSFile('/assets/js/plugin/datatables/dataTables.colVis.min.js'); //datatable
-		$this->addJSFile('/assets/js/plugin/datatables/dataTables.tableTools.min.js'); //datatable
-		$this->addJSFile('/assets/js/plugin/datatables/dataTables.bootstrap.min.js'); //datatable
-		$this->addJSFile('/assets/js/plugin/datatable-responsive/datatables.responsive.min.js'); //datatable */
+		$widget->body   = array('content' => $this->load->view('std/task_wizard', $data, true ), 'class'=>'fuelux');
+		
+		if(!$task_is_running){
+			
+			$this->addCssFile('/assets/css/std/select_file.css');
+			$this->addCssFile('/assets/css/std/jog_setup.css');
+			$this->addCssFile('/assets/css/std/jogtouch.css');
+			$this->addCssFile('/assets/css/std/jogcontrols.css');
+			
+			$this->addJSFile('/assets/js/plugin/datatables/jquery.dataTables.min.js'); //datatable
+			$this->addJSFile('/assets/js/plugin/datatables/dataTables.colVis.min.js'); //datatable
+			$this->addJSFile('/assets/js/plugin/datatables/dataTables.tableTools.min.js'); //datatable
+			$this->addJSFile('/assets/js/plugin/datatables/dataTables.bootstrap.min.js'); //datatable
+			$this->addJSFile('/assets/js/plugin/datatable-responsive/datatables.responsive.min.js'); //datatable */
+			
+			$this->addJSFile('/assets/js/std/raphael.min.js' ); //vector library
+			$this->addJSFile('/assets/js/std/modernizr-touch.js' ); //touch device detection
+			$this->addJSFile('/assets/js/std/jogcontrols.js' ); //jog controls
+			$this->addJSFile('/assets/js/std/jogtouch.js' ); //jog controls
+			$this->addJSFile('/assets/js/plugin/knob/jquery.knob.min.js');
+		}
+		
 		
 		$this->addJSFile('/assets/js/plugin/flot/jquery.flot.cust.min.js'); 
 		$this->addJSFile('/assets/js/plugin/flot/jquery.flot.resize.min.js');
 		$this->addJSFile('/assets/js/plugin/flot/jquery.flot.fillbetween.min.js');
 		$this->addJSFile('/assets/js/plugin/flot/jquery.flot.time.min.js');
 		$this->addJSFile('/assets/js/plugin/flot/jquery.flot.tooltip.min.js');
-
+		$this->addJSFile('/assets/js/plugin/fuelux/wizard/wizard.min.old.js'); //wizard
+		
+		
 		$this->addJsInLine($this->load->view( plugin_url('make/js'), $data, true));
 
-		$this->addJSFile('/assets/js/std/raphael.min.js' ); //vector library
-		$this->addJSFile('/assets/js/std/modernizr-touch.js' ); //touch device detection
-		$this->addJSFile('/assets/js/std/jogcontrols.js' ); //jog controls
-		$this->addJSFile('/assets/js/std/jogtouch.js' ); //jog controls
-
-		$this->addJsInLine($this->load->view( 'std/task_safety_check_js', $data, true));
-
-		$this->addJSFile('/assets/js/plugin/fuelux/wizard/wizard.min.old.js'); //wizard
+		if(!$task_is_running){
+			$this->addJsInLine($this->load->view( 'std/task_safety_check_js', $data, true));
+			$this->addJsInLine($this->load->view( 'std/select_file_js', $data, true));
+			$this->addJsInLine($this->load->view( 'std/jog_setup_js', $data, true));
+		}
+		
 		$this->addJsInLine($this->load->view( 'std/task_wizard_js', $data, true));
-		
-		$this->addJsInLine($this->load->view( 'std/select_file_js', $data, true));
-		
-		$this->addJSFile('/assets/js/plugin/knob/jquery.knob.min.js');
-		$this->addJsInLine($this->load->view( 'std/jog_setup_js', $data, true));
-		
 		$this->addJsInLine($this->load->view( 'std/task_execute_js', $data, true));
 		$this->addJsInLine($this->load->view( 'std/task_finished_js', $data, true));
 		
@@ -252,8 +260,9 @@ class Plugin_fab_laser extends FAB_Controller {
 		);
 		$taskId   = $this->tasks->add($taskData);
 		
-		$response['start'] = true;
-		$response['id_task'] = $taskId;
+		$response['start']        = true;
+		$response['id_task']      = $taskId;
+		$response['file']['name'] = $fileToCreate['client_name'];
 		
 		//start print
 		$params = array(
