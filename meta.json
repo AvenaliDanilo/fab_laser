@@ -23,7 +23,7 @@
         }
     }, 
     "plugin_uri": "https://github.com/FABtotum/fab_laser", 
-    "version": "0.10.6", 
+    "version": "1.0.0", 
     "plugin_slug": "fab_laser", 
     "filetypes": []
 }
