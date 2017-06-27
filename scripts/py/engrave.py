@@ -61,7 +61,7 @@ class Application(GCodePusher):
         self.trace( _("Engraving STARTED") )
         
         with self.monitor_lock:
-            self.print_stats['first_move'] = True
+            #~ self.print_stats['first_move'] = True
             self.set_task_status(GCodePusher.TASK_RUNNING)
             self.update_monitor_file()
 
