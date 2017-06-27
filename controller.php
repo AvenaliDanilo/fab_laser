@@ -107,6 +107,7 @@ class Plugin_fab_laser extends FAB_Controller {
 		
 		// task_wizard
 		$data['start_task_url'] = plugin_url('startTask');
+		$data['restart_task_url_file'] = plugin_url('make');
 		
 		// jog_setup
 		$data['jog_message'] = 'Position the laser point to the origin (bottom-left corner) of the drawing. Jog to desired XY position, press <i class="fa fa-bullseye"></i> and then press "Start" ';
