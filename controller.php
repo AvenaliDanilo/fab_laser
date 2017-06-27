@@ -251,8 +251,8 @@ class Plugin_fab_laser extends FAB_Controller {
 		$this->load->model('Tasks', 'tasks');
 		$taskData = array(
 			'user'       => $this->session->user['id'],
-			'controller' => 'plugin',
-			'type'       => 'fab_laser',
+			'controller' => 'plugin/fab_laser/make',
+			'type'       => 'laser',
 			'status'     => 'running',
 			'id_file'    => $data['idFile'],
 			'id_object'  => $object['id'],

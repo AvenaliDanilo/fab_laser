@@ -87,7 +87,7 @@ class Application(GCodePusher):
         :type task_id: int
         """
 
-        self.prepare_task(task_id, task_type='laser', gcode_file=gcode_file)
+        self.prepare_task(task_id, task_type='laser', task_controller='plugin/fab_laser/make', gcode_file=gcode_file)
         self.set_task_status(GCodePusher.TASK_RUNNING)
         
         if self.standalone:
