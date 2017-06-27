@@ -21,12 +21,32 @@
 	$(document).ready(function() {
 		$('#understandSafety').on('click', understandSafety);
 		$('[data-toggle="tooltip"]').tooltip();
+
+
+		$("#understand").click(function(){
+			if($(this).is(":checked")){
+				enableButton('.button-next');
+			}else{
+				disableButton('.button-next');
+			}
+		});
+
+		$("#focus-point").click(function() {
+
+			if($(this).is(":checked")){
+				$("#laser-calibrate-z-focus-row").show();
+			}else{
+				$("#laser-calibrate-z-focus-row").hide();
+			}
+			
+		});
+
+		
 	});
 	
 	function handleStep()
 	{
 		var step = $('.wizard').wizard('selectedItem').step;
-		console.log('handleStep', step);
 		
 		if(step == 3)
 		{
@@ -106,8 +126,9 @@
 		openWait('<i class="fa fa-spinner fa-spin "></i> ' + "<?php echo _('Preparing {0}');?>".format("<?php echo _(ucfirst($type)); ?>"), _("Checking safety measures...") );
 		
 		var data = {
-			idFile:idFile
-			};
+			idFile:idFile,
+			go_to_focus: $("#focus-point").is(":checked")
+		};
 			
 		$.ajax({
 			type: 'post',

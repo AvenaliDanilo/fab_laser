@@ -100,7 +100,7 @@ class Plugin_fab_laser extends FAB_Controller {
 		
 		
 		//~ $data['z_height_values'] = array('0.1' => '0.1', '0.01' => '0.01');
-		
+		$data['is_laser'] = true;
 		// select_file
 		$data['get_files_url'] = 'std/getFiles/laser';
 		$data['get_reacent_url'] = 'std/getRecentFiles/laser';
@@ -108,9 +108,8 @@ class Plugin_fab_laser extends FAB_Controller {
 		// task_wizard
 		$data['start_task_url'] = plugin_url('startTask');
 		$data['restart_task_url_file'] = plugin_url('make');
-		
 		// jog_setup
-		$data['jog_message'] = 'Position the laser point to the origin (bottom-left corner) of the drawing. Jog to desired XY position, press <i class="fa fa-bullseye"></i> and then press "Start" ';
+		$data['jog_message'] = 'Position the laser point to the origin (bottom-left corner) of the drawing.<br>Jog to desired XY position, press <i class="fa fa-bullseye"></i> and then press "Start" ';
 		$data['jog_image'] = plugin_assets_url('img/fabui_laser_02a.png');
 		$data['fourth_axis'] = False;
 		
@@ -216,7 +215,7 @@ class Plugin_fab_laser extends FAB_Controller {
 		$this->load->model('Files', 'files');
 		
 		$data = $this->input->post();
-		
+		$go_to_focus_point = $data['go_to_focus'] == 'true' ? 1 : 0;
 		$fileToCreate = $this->files->get($data['idFile'], 1);
 		
 		//reset task monitor file
@@ -230,7 +229,8 @@ class Plugin_fab_laser extends FAB_Controller {
 			return;
 		}
 		
-		$startSubtractive = doMacro('start_engraving');
+		$startSubtractive = doMacro('start_engraving', '', [$go_to_focus_point]);
+		
 		if($startSubtractive['response'] != 'success'){
 			$this->output->set_content_type('application/json')->set_output(json_encode(array('start' => false, 'message' => $startSubtractive['message'])));
 			return;
