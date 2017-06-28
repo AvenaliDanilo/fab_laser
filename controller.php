@@ -92,7 +92,7 @@ class Plugin_fab_laser extends FAB_Controller {
 		// Safety check
 		if(!$task_is_running){
 			
-			$data['safety_check'] = safetyCheck("laser", false);
+			$data['safety_check'] = safetyCheck("laser", "no");
 			$data['safety_check']['url'] = 'std/safetyCheck/laser/no';
 			$data['safety_check']['content'] = $this->load->view( 'std/task_safety_check', $data, true );
 		}
