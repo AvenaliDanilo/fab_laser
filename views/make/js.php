@@ -146,8 +146,9 @@
 				disableCompleteSteps();
 				initRunningTaskPage();
 				updateZOverride(0);
-
-				ga('send', 'event', 'laser', 'start', 'laser started');
+                                if (typeof ga !== 'undefined') {
+				    ga('send', 'event', 'laser', 'start', 'laser started');
+				}
 			}
 			closeWait();
 		})
