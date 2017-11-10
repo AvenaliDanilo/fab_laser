@@ -12,18 +12,19 @@
     ], 
     "required_bundles": [], 
     "icon": "icon-communication-143", 
-    "author_uri": "mailto:dk@fabtotum.com", 
+    "author_uri": "mailto:info@fabtotum.com", 
     "name": "Laser", 
     "author": "FABteam", 
     "menu": {
         "/make/laser": {
             "title": "Laser",
             "icon": "icon-communication-143", 
-            "url": "plugin/fab_laser/make"
+            "url": "plugin/fab_laser/make",
+            "pos": 40
         }
     }, 
     "plugin_uri": "https://github.com/FABtotum/fab_laser", 
-    "version": "1.0.2", 
+    "version": "1.0.3", 
     "plugin_slug": "fab_laser", 
     "filetypes": []
 }
