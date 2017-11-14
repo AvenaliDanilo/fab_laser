@@ -16,6 +16,7 @@
 	var idFile <?php echo $file_id != '' ? ' = '.$file_id : ''; ?>; //file to create
 	<?php endif; ?>
 	var idTask <?php echo $runningTask ? ' = '.$runningTask['id'] : ''; ?>;
+	var isLaserPro = <?php echo $is_laser_pro ? 'true' : 'false'; ?>;
 	
 	
 	$(document).ready(function() {
@@ -53,7 +54,7 @@
 			<?php if($runningTask): ?>;
 			// do nothing
 			<?php else: ?>
-				cmd = 'M62';
+				cmd = 'M62\nM723';
 				fabApp.jogMdi(cmd);
 				startTask();
 				return false;
@@ -66,9 +67,7 @@
 	
 	function checkWizard()
 	{
-		console.log('check Wizard');
 		var step = $('.wizard').wizard('selectedItem').step;
-		console.log(step);
 		switch(step){
 			case 1: // Select file
 				disableButton('.button-prev');
@@ -78,7 +77,7 @@
 					disableButton('.button-next');
 				$('.button-next').find('span').html('Next');
 				
-				cmd = 'M62';
+				cmd = 'M62\n\M723'; //shutdown laser
 				fabApp.jogMdi(cmd);
 				break;
 				
@@ -87,7 +86,7 @@
 				disableButton('.button-next');
 				$('.button-next').find('span').html('Next');
 				
-				cmd = 'M62';
+				cmd = 'M62\n\M723'; //shutdown laser (also laser cross)
 				fabApp.jogMdi(cmd);
 				break;
 				
@@ -95,9 +94,15 @@
 				enableButton('.button-prev');
 				disableButton('.button-next');
 				$('.button-next').find('span').html('Engrave');
+
+				if(isLaserPro){ //if is pro laser use laser cross for calibration
+					cmd = 'M722\nM300\n';
+				}else{
+					cmd = 'M60 S10\nM300\n';
+				}
 				
-				cmd = 'M60 S10\nM300\n';
 				fabApp.jogMdi(cmd);
+				//fabApp.jogMdi('M701 S0\nM702 S0\nM703 S0\n');
 				break;
 				
 			case 4: // Execution
@@ -129,6 +134,10 @@
 			idFile:idFile,
 			go_to_focus: $("#focus-point").is(":checked")
 		};
+
+		if(isLaserPro){
+			data['fan'] = $("#fan-on").is(":checked");
+		}
 			
 		$.ajax({
 			type: 'post',
@@ -146,17 +155,18 @@
 				disableCompleteSteps();
 				initRunningTaskPage();
 				updateZOverride(0);
-                                if (typeof ga !== 'undefined') {
+                if (typeof ga !== 'undefined') {
 				    ga('send', 'event', 'laser', 'start', 'laser started');
 				}
 			}
 			closeWait();
 		})
 	}
-	
+	/**
+	*
+	**/
 	function setLaserPWM(action, value)
 	{
-		console.log(action, value);
 		message="Laser PWM set to: " + value;
 		showActionAlert(message);
 	}

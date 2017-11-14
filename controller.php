@@ -25,6 +25,7 @@ class Plugin_fab_laser extends FAB_Controller {
 
 	public function index()
 	{
+		
 		$this->load->library('smart');
 		$this->load->helper('form');
 		$this->load->helper('fabtotum_helper');
@@ -59,6 +60,7 @@ class Plugin_fab_laser extends FAB_Controller {
 		$this->load->model('Files', 'files');
 		
 		$data = array();
+		
 		$data['runningTask'] = $this->runningTask;
 		//~ $data['runningTask'] = array('id' => 5);
 		$data['file_id'] = '';
@@ -98,20 +100,19 @@ class Plugin_fab_laser extends FAB_Controller {
 		}
 		
 		
-		
-		//~ $data['z_height_values'] = array('0.1' => '0.1', '0.01' => '0.01');
-		$data['is_laser'] = true;
+		$data['is_laser']     = true;
+		$data['is_laser_pro'] = isLaserProHead();
 		// select_file
-		$data['get_files_url'] = 'std/getFiles/laser';
+		$data['get_files_url']   = 'std/getFiles/laser';
 		$data['get_reacent_url'] = 'std/getRecentFiles/laser';
 		
 		// task_wizard
-		$data['start_task_url'] = plugin_url('startTask');
+		$data['start_task_url']        = plugin_url('startTask');
 		$data['restart_task_url_file'] = plugin_url('make', true);
 		
 		// jog_setup
-		$data['jog_message'] = 'Position the laser point to the origin (bottom-left corner) of the drawing.<br>Jog to desired XY position, press <i class="fa fa-bullseye"></i> and then press "Start" ';
-		$data['jog_image'] = plugin_assets_url('img/fabui_laser_02a.png');
+		$data['jog_message'] = _('Position the laser point to the origin (bottom-left corner) of the drawing.<br>Jog to desired XY position, press <i class="fa fa-bullseye"></i> and then press "Start" ');
+		$data['jog_image']   = plugin_assets_url('img/fabui_laser_02a.png');
 		$data['fourth_axis'] = False;
 		
 		// job_execute
@@ -122,31 +123,31 @@ class Plugin_fab_laser extends FAB_Controller {
 		$data['rpm_max'] = 255;
 		
 		// job finish
-		$data['z_height_save_message'] = "Z's height correction is <strong><span class=\"z-height\"></span></strong>, do you want to save it and override the value for the next engraving?";
-		$data['task_jump_restart'] = 3;
+		$data['z_height_save_message'] = _("Z's height correction is <strong><span class=\"z-height\"></span></strong>, do you want to save it and override the value for the next engraving?");
+		$data['task_jump_restart']     = 3;
 		
 		$data['steps'] = array(
 				array('number'  => 1,
-				 'title'   => 'Choose File',
+				 'title'   => _('Choose File'),
 				 'content' => !$task_is_running ? $this->load->view( 'std/select_file', $data, true ) : '',
 				 'active'  => !$file_is_ok && !$task_is_running
 			    ),
 				array('number'  => 2,
-				 'title'   => 'Safety',
+				 'title'   => _('Safety'),
 				 'content' => !$task_is_running ? $this->load->view( plugin_url('make/wizard/safety'), $data, true ) : '',
 				 'active'  => $file_is_ok && !$task_is_running
 			    ),
 				array('number'  => 3,
-				 'title'   => 'Get Ready',
+				 'title'   => _('Get Ready'),
 				 'content' => !$task_is_running ? $this->load->view( 'std/jog_setup', $data, true ) : '',
 			    ),
 				array('number'  => 4,
-				 'title'   => 'Laser Engraving',
+				 'title'   => _('Laser Engraving'),
 				 'content' => $this->load->view( 'std/task_execute', $data, true ),
 				 'active' => $task_is_running
 			    ),
 				array('number'  => 5,
-				 'title'   => 'Finish',
+				 'title'   => _('Finish'),
 				 'content' => $this->load->view( 'std/task_finished', $data, true )
 			    )
 			);
@@ -216,8 +217,11 @@ class Plugin_fab_laser extends FAB_Controller {
 		$this->load->model('Files', 'files');
 		
 		$data = $this->input->post();
+		
+		
 		$go_to_focus_point = $data['go_to_focus'] == 'true' ? 1 : 0;
-		$fileToCreate = $this->files->get($data['idFile'], 1);
+		$fan_on            = isset($data['fan']) && $data['fan'] == 'true' ? 1 : 0;
+		$fileToCreate      = $this->files->get($data['idFile'], 1);
 		
 		//reset task monitor file
 		resetTaskMonitor();
@@ -230,7 +234,9 @@ class Plugin_fab_laser extends FAB_Controller {
 			return;
 		}
 		
-		$startSubtractive = doMacro('start_engraving', '', [$go_to_focus_point]);
+		$startSubtractive = doMacro('start_engraving', '', [$go_to_focus_point, $fan_on]);
+		
+		
 		
 		if($startSubtractive['response'] != 'success'){
 			$this->output->set_content_type('application/json')->set_output(json_encode(array('start' => false, 'message' => $startSubtractive['message'])));
