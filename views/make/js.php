@@ -36,10 +36,33 @@
 
 			if($(this).is(":checked")){
 				$("#laser-calibrate-z-focus-row").show();
+				$("#automatic-positioning").prop('checked', false);
+				$(".jog-controls").show();
+				$(".jog-controls-holder").show();
+				$(".touch-container").show();
+				$("#head-position-row").show();
 			}else{
 				$("#laser-calibrate-z-focus-row").hide();
 			}
 			
+		});
+		
+		$("#automatic-positioning").on('click', function(){
+			if($(this).is(":checked")){
+				$("#focus-point").prop('checked', false);
+				$(".jog-controls").hide();
+				$(".jog-controls-holder").hide();
+				$(".touch-container").hide();
+				enableButton('.button-next');
+				$("#laser-calibrate-z-focus-row").show();
+				$("#head-position-row").hide();
+			}else{
+				$(".jog-controls").show();
+				$(".jog-controls-holder").show();
+				$(".touch-container").show();
+				disableButton('.button-next');
+				$("#head-position-row").show();
+			}
 		});
 
 		
@@ -137,6 +160,7 @@
 
 		if(isLaserPro){
 			data['fan'] = $("#fan-on").is(":checked");
+			data['automatic_positioning'] = $("#automatic-positioning").is(":checked");
 		}
 			
 		$.ajax({

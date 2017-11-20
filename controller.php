@@ -112,7 +112,7 @@ class Plugin_fab_laser extends FAB_Controller {
 		
 		// jog_setup
 		$data['jog_message'] = _('Position the laser point to the origin (bottom-left corner) of the drawing.<br>Jog to desired XY position, press <i class="fa fa-bullseye"></i> and then press "Start" ');
-		$data['jog_image']   = plugin_assets_url('img/fabui_laser_02a.png');
+		$data['jog_image']   = !$data['is_laser_pro'] ? plugin_assets_url('img/fabui_laser_02a.png') : plugin_assets_url('img/fabui_laser_pro_02a.png');
 		$data['fourth_axis'] = False;
 		
 		// job_execute
@@ -218,10 +218,10 @@ class Plugin_fab_laser extends FAB_Controller {
 		
 		$data = $this->input->post();
 		
-		
-		$go_to_focus_point = $data['go_to_focus'] == 'true' ? 1 : 0;
-		$fan_on            = isset($data['fan']) && $data['fan'] == 'true' ? 1 : 0;
-		$fileToCreate      = $this->files->get($data['idFile'], 1);
+		$go_to_focus_point     = $data['go_to_focus'] == 'true' ? 1 : 0;
+		$automatic_positioning = isset($data['automatic_positioning']) && $data['automatic_positioning'] == 'true' ? 1 : 0;
+		$fan_on                = isset($data['fan']) && $data['fan'] == 'true' ? 1 : 0;
+		$fileToCreate          = $this->files->get($data['idFile'], 1);
 		
 		//reset task monitor file
 		resetTaskMonitor();
@@ -234,7 +234,7 @@ class Plugin_fab_laser extends FAB_Controller {
 			return;
 		}
 		
-		$startSubtractive = doMacro('start_engraving', '', [$go_to_focus_point, $fan_on]);
+		$startSubtractive = doMacro('start_engraving', '', [$go_to_focus_point, $automatic_positioning, $fan_on]);
 		
 		
 		
