@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2017-12-05 16:59+0100\n"
-"PO-Revision-Date: 2017-12-05 17:00+0100\n"
+"PO-Revision-Date: 2017-12-05 17:08+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: it\n"
@@ -32,11 +32,11 @@ msgstr ""
 
 #: controller.php:131
 msgid "Choose File"
-msgstr ""
+msgstr "Scegli il file"
 
 #: controller.php:136
 msgid "Safety"
-msgstr ""
+msgstr "Sicurezza"
 
 #: controller.php:141
 msgid "Get Ready"
@@ -44,7 +44,7 @@ msgstr ""
 
 #: controller.php:145
 msgid "Laser Engraving"
-msgstr ""
+msgstr "Incisione Laser"
 
 #: controller.php:150
 msgid "Finish"
@@ -52,7 +52,7 @@ msgstr ""
 
 #: controller.php:246
 msgid "Please wait..."
-msgstr ""
+msgstr "Prego attendere..."
 
 #: controller.php:253
 msgid "Task Not Implemented yet."
@@ -60,11 +60,11 @@ msgstr ""
 
 #: views/make/js.php:154
 msgid "Preparing {0}"
-msgstr ""
+msgstr "Preparando {0}"
 
 #: views/make/wizard/safety.php:22
 msgid "Warning"
-msgstr ""
+msgstr "Attenzione"
 
 #: views/make/wizard/safety.php:22
 msgid "You are about to start a manufacturing task involving the laser head"
@@ -72,7 +72,7 @@ msgstr ""
 
 #: views/make/wizard/safety.php:24 views/make/wizard/safety.php:39
 msgid "safety guidelines"
-msgstr ""
+msgstr "norme di sicurezza"
 
 #: views/make/wizard/safety.php:27
 msgid "Verify that engraving or cutting the material poses no hazard"
@@ -94,7 +94,7 @@ msgstr ""
 
 #: views/make/wizard/safety.php:31
 msgid "Wait for the procedure to end"
-msgstr ""
+msgstr "Aspettare che la procedura finisca"
 
 #: views/make/wizard/safety.php:32
 msgid ""
@@ -103,40 +103,40 @@ msgstr ""
 
 #: views/make/wizard/safety.php:39
 msgid "I understand and i agree with the conditions"
-msgstr ""
+msgstr "Ho capito e accetto le condizioni"
 
 #: views/make/wizard/safety.php:39
 msgid "and"
-msgstr ""
+msgstr "e le"
 
 #: scripts/py/engrave.py:61
 msgid "Engraving STARTED"
-msgstr ""
+msgstr "Incisione laser iniziata"
 
 #: scripts/py/engrave.py:73
 msgid "Engraving PAUSED"
-msgstr ""
+msgstr "Incisione laser in pausa"
 
 #: scripts/py/engrave.py:74
 msgid "Please wait until the buffered moves in totumduino are finished"
-msgstr ""
+msgstr "Prego attendere che  tutti i comandi bufferizzati abbiano terminato"
 
 #: scripts/py/engrave.py:76
 msgid "Engraving RESUMED"
-msgstr ""
+msgstr "Incisione lasera ripresa"
 
 #: scripts/py/engrave.py:78
 msgid "Engraving ABORTED"
-msgstr ""
+msgstr "Incisione laser annullata"
 
 #: scripts/py/engrave.py:98
 msgid "Engraving Initialized."
-msgstr ""
+msgstr "Incisione laser inizializzata"
 
 #: scripts/py/engrave.py:105
 msgid "Task ID."
-msgstr ""
+msgstr "Task ID"
 
 #: scripts/py/engrave.py:106
 msgid "File name."
-msgstr ""
+msgstr "Nome file"

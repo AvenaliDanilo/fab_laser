@@ -56,6 +56,9 @@ class Plugin_fab_laser extends FAB_Controller {
 		$this->load->helper(array('language_helper', 'form', 'fabtotum_helper', 'utility_helper', 'plugin_helper'));
 		$this->load->model('Files', 'files');
 		
+		//load plugin translation
+		loadPluginTranslation();
+		
 		$data = array();
 		
 		$data['runningTask'] = $this->runningTask;

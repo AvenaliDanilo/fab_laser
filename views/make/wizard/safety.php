@@ -21,7 +21,7 @@
 					<div class="description">
 						<div class="alert alert-warning font-md" role="alert"><strong><?php echo _("Warning");?>:</strong> <?php echo _("You are about to start a manufacturing task involving the laser head"); ?> </div>
 						<p class="font-md text-left">
-							Make sure to follow the <a target="_blank" href="<?php echo $safety_guide_lines_link; ?>" class="no-ajax"><?php echo _("safety guidelines");?></a>
+							<?php echo _("Make sure to follow the");?> <a target="_blank" href="<?php echo $safety_guide_lines_link; ?>" class="no-ajax"><?php echo _("safety guidelines");?></a>
 						</p>
 						<ol class="margin-top-10 font-md">
 							<li><?php echo _("Verify that engraving or cutting the material poses no hazard");?></li>
