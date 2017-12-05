@@ -1,0 +1,142 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2017-12-05 16:59+0100\n"
+"PO-Revision-Date: 2017-12-05 17:00+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.11\n"
+"X-Poedit-Basepath: ../../..\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SearchPath-0: scripts\n"
+"X-Poedit-SearchPath-1: scripts/py\n"
+"X-Poedit-SearchPath-2: controller.php\n"
+"X-Poedit-SearchPath-3: views\n"
+
+#: controller.php:114
+msgid ""
+"Position the laser point to the origin (bottom-left corner) of the drawing."
+"<br>Jog to desired XY position, press <i class=\"fa fa-bullseye\"></i> and "
+"then press \"Start\" "
+msgstr ""
+
+#: controller.php:126
+msgid ""
+"Z's height correction is <strong><span class=\"z-height\"></span></strong>, "
+"do you want to save it and override the value for the next engraving?"
+msgstr ""
+
+#: controller.php:131
+msgid "Choose File"
+msgstr ""
+
+#: controller.php:136
+msgid "Safety"
+msgstr ""
+
+#: controller.php:141
+msgid "Get Ready"
+msgstr ""
+
+#: controller.php:145
+msgid "Laser Engraving"
+msgstr ""
+
+#: controller.php:150
+msgid "Finish"
+msgstr ""
+
+#: controller.php:246
+msgid "Please wait..."
+msgstr ""
+
+#: controller.php:253
+msgid "Task Not Implemented yet."
+msgstr ""
+
+#: views/make/js.php:154
+msgid "Preparing {0}"
+msgstr ""
+
+#: views/make/wizard/safety.php:22
+msgid "Warning"
+msgstr ""
+
+#: views/make/wizard/safety.php:22
+msgid "You are about to start a manufacturing task involving the laser head"
+msgstr ""
+
+#: views/make/wizard/safety.php:24 views/make/wizard/safety.php:39
+msgid "safety guidelines"
+msgstr ""
+
+#: views/make/wizard/safety.php:27
+msgid "Verify that engraving or cutting the material poses no hazard"
+msgstr ""
+
+#: views/make/wizard/safety.php:28
+msgid "Put the provided safety goggles now before continuing"
+msgstr ""
+
+#: views/make/wizard/safety.php:29
+msgid ""
+"Make sure no one else can approach the  unit without proper safety goggles "
+"and being informed of the hazard"
+msgstr ""
+
+#: views/make/wizard/safety.php:30
+msgid "Do not remove the goggles unless it's safe to do so"
+msgstr ""
+
+#: views/make/wizard/safety.php:31
+msgid "Wait for the procedure to end"
+msgstr ""
+
+#: views/make/wizard/safety.php:32
+msgid ""
+"Do not touch, place or remove the laser head while the unit is operating"
+msgstr ""
+
+#: views/make/wizard/safety.php:39
+msgid "I understand and i agree with the conditions"
+msgstr ""
+
+#: views/make/wizard/safety.php:39
+msgid "and"
+msgstr ""
+
+#: scripts/py/engrave.py:61
+msgid "Engraving STARTED"
+msgstr ""
+
+#: scripts/py/engrave.py:73
+msgid "Engraving PAUSED"
+msgstr ""
+
+#: scripts/py/engrave.py:74
+msgid "Please wait until the buffered moves in totumduino are finished"
+msgstr ""
+
+#: scripts/py/engrave.py:76
+msgid "Engraving RESUMED"
+msgstr ""
+
+#: scripts/py/engrave.py:78
+msgid "Engraving ABORTED"
+msgstr ""
+
+#: scripts/py/engrave.py:98
+msgid "Engraving Initialized."
+msgstr ""
+
+#: scripts/py/engrave.py:105
+msgid "Task ID."
+msgstr ""
+
+#: scripts/py/engrave.py:106
+msgid "File name."
+msgstr ""

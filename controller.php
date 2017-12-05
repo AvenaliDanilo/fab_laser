@@ -53,10 +53,7 @@ class Plugin_fab_laser extends FAB_Controller {
 	public function make($fileID = '-1')
 	{
 		$this->load->library('smart');
-		$this->load->helper('form');
-		$this->load->helper('fabtotum_helper');
-		$this->load->helper('utility_helper');
-		$this->load->helper('plugin_helper');
+		$this->load->helper(array('language_helper', 'form', 'fabtotum_helper', 'utility_helper', 'plugin_helper'));
 		$this->load->model('Files', 'files');
 		
 		$data = array();
@@ -102,6 +99,9 @@ class Plugin_fab_laser extends FAB_Controller {
 		
 		$data['is_laser']     = true;
 		$data['is_laser_pro'] = isLaserProHead();
+		
+		$language = getCurrentLanguage() == 'it_IT' ? 'it' : ''; 
+		$data['safety_guide_lines_link'] = $data['is_laser_pro'] ? 'https://www.fabtotum.com/'.$language.'/laser-head-pro-safety-health-guidelines/' : 'https://www.fabtotum.com/'.$language.'/laser-head-safety-health-guidelines';
 		// select_file
 		$data['get_files_url']   = 'std/getFiles/laser';
 		$data['get_reacent_url'] = 'std/getRecentFiles/laser';
