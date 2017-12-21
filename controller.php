@@ -207,6 +207,7 @@ class Plugin_fab_laser extends FAB_Controller {
 		$this->addJsInLine($this->load->view( 'std/task_wizard_js', $data, true));
 		$this->addJsInLine($this->load->view( 'std/task_execute_js', $data, true));
 		$this->addJsInLine($this->load->view( 'std/task_finished_js', $data, true));
+		$this->addCssFile('/assets/css/std/task_execute.css');
 		
 		$this->content = $widget->print_html(true);
 		$this->view();
