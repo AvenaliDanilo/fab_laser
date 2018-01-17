@@ -114,7 +114,7 @@ class Plugin_fab_laser extends FAB_Controller {
 		$data['restart_task_url_file'] = plugin_url('make', true);
 		
 		// jog_setup
-		$data['jog_message'] = _('Position the laser point to the origin (bottom-left corner) of the drawing.<br>Jog to desired XY position, press <i class="fa fa-bullseye"></i> and then press "Start" ');
+		$data['jog_message'] = _('Position the laser point to the origin (bottom-left corner) of the drawing.<br>Jog to desired XY position, press <i class="fa fa-bullseye"></i> and then press "Engrave" ');
 		$data['jog_image']   = !$data['is_laser_pro'] ? plugin_assets_url('img/fabui_laser_02a.png') : plugin_assets_url('img/fabui_laser_pro_02a.png');
 		$data['fourth_axis'] = False;
 		

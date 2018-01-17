@@ -111,6 +111,7 @@
 				
 				cmd = 'M62\n\M723'; //shutdown laser (also laser cross)
 				fabApp.jogMdi(cmd);
+				$("#understand").prop('checked', false);
 				break;
 				
 			case 3: // Calibration
