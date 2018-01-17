@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2017-12-05 16:59+0100\n"
-"PO-Revision-Date: 2017-12-05 17:08+0100\n"
+"POT-Creation-Date: 2018-01-17 17:37+0100\n"
+"PO-Revision-Date: 2018-01-17 17:47+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.11\n"
+"X-Generator: Poedit 2.0.5\n"
 "X-Poedit-Basepath: ../../..\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SearchPath-0: scripts\n"
@@ -17,97 +17,46 @@ msgstr ""
 "X-Poedit-SearchPath-2: controller.php\n"
 "X-Poedit-SearchPath-3: views\n"
 
-#: controller.php:114
+#: controller.php:117
 msgid ""
 "Position the laser point to the origin (bottom-left corner) of the drawing."
 "<br>Jog to desired XY position, press <i class=\"fa fa-bullseye\"></i> and "
-"then press \"Start\" "
+"then press \"Engrave\" "
 msgstr ""
 
-#: controller.php:126
+#: controller.php:129
 msgid ""
 "Z's height correction is <strong><span class=\"z-height\"></span></strong>, "
 "do you want to save it and override the value for the next engraving?"
 msgstr ""
 
-#: controller.php:131
+#: controller.php:134
 msgid "Choose File"
 msgstr "Scegli il file"
 
-#: controller.php:136
+#: controller.php:139
 msgid "Safety"
 msgstr "Sicurezza"
 
-#: controller.php:141
+#: controller.php:144
 msgid "Get Ready"
-msgstr ""
+msgstr "Tieniti pronto"
 
-#: controller.php:145
+#: controller.php:148
 msgid "Laser Engraving"
 msgstr "Incisione Laser"
 
-#: controller.php:150
+#: controller.php:153
 msgid "Finish"
-msgstr ""
+msgstr "Fine"
 
-#: controller.php:246
+#: controller.php:250
 msgid "Please wait..."
 msgstr "Prego attendere..."
 
-#: controller.php:253
+#: controller.php:257
 msgid "Task Not Implemented yet."
 msgstr ""
-
-#: views/make/js.php:154
-msgid "Preparing {0}"
-msgstr "Preparando {0}"
-
-#: views/make/wizard/safety.php:22
-msgid "Warning"
-msgstr "Attenzione"
-
-#: views/make/wizard/safety.php:22
-msgid "You are about to start a manufacturing task involving the laser head"
-msgstr ""
-
-#: views/make/wizard/safety.php:24 views/make/wizard/safety.php:39
-msgid "safety guidelines"
-msgstr "norme di sicurezza"
-
-#: views/make/wizard/safety.php:27
-msgid "Verify that engraving or cutting the material poses no hazard"
-msgstr ""
-
-#: views/make/wizard/safety.php:28
-msgid "Put the provided safety goggles now before continuing"
-msgstr ""
-
-#: views/make/wizard/safety.php:29
-msgid ""
-"Make sure no one else can approach the  unit without proper safety goggles "
-"and being informed of the hazard"
-msgstr ""
-
-#: views/make/wizard/safety.php:30
-msgid "Do not remove the goggles unless it's safe to do so"
-msgstr ""
-
-#: views/make/wizard/safety.php:31
-msgid "Wait for the procedure to end"
-msgstr "Aspettare che la procedura finisca"
-
-#: views/make/wizard/safety.php:32
-msgid ""
-"Do not touch, place or remove the laser head while the unit is operating"
-msgstr ""
-
-#: views/make/wizard/safety.php:39
-msgid "I understand and i agree with the conditions"
-msgstr "Ho capito e accetto le condizioni"
-
-#: views/make/wizard/safety.php:39
-msgid "and"
-msgstr "e le"
 
 #: scripts/py/engrave.py:61
 msgid "Engraving STARTED"
@@ -140,3 +89,64 @@ msgstr "Task ID"
 #: scripts/py/engrave.py:106
 msgid "File name."
 msgstr "Nome file"
+
+#: views/make/js.php:155
+msgid "Preparing {0}"
+msgstr "Preparando {0}"
+
+#: views/make/wizard/safety.php:22
+msgid "Warning"
+msgstr "Attenzione"
+
+#: views/make/wizard/safety.php:22
+msgid "You are about to start a manufacturing task involving the laser head"
+msgstr "Stai per iniziare un'attività che coinvolge la testa laser"
+
+#: views/make/wizard/safety.php:24
+msgid "Make sure to follow the"
+msgstr "Assicurarsi di seguire le"
+
+#: views/make/wizard/safety.php:24 views/make/wizard/safety.php:39
+msgid "safety guidelines"
+msgstr "norme di sicurezza"
+
+#: views/make/wizard/safety.php:27
+msgid "Verify that engraving or cutting the material poses no hazard"
+msgstr ""
+"Verificare che l'incisione o il taglio del materiale non rappresenti un "
+"pericolo"
+
+#: views/make/wizard/safety.php:28
+msgid "Put the provided safety goggles now before continuing"
+msgstr "Metti gli occhiali di protezione forniti prima di continuare"
+
+#: views/make/wizard/safety.php:29
+msgid ""
+"Make sure no one else can approach the  unit without proper safety goggles "
+"and being informed of the hazard"
+msgstr ""
+"Assicurarsi che nessun altro possa avvicinarsi alla stampante senza "
+"occhiali di protezione adeguati ed essere informato del pericolo"
+
+#: views/make/wizard/safety.php:30
+msgid "Do not remove the goggles unless it's safe to do so"
+msgstr "Non rimuovere gli occhiali se non è sicuro farlo"
+
+#: views/make/wizard/safety.php:31
+msgid "Wait for the procedure to end"
+msgstr "Aspettare che la procedura finisca"
+
+#: views/make/wizard/safety.php:32
+msgid ""
+"Do not touch, place or remove the laser head while the unit is operating"
+msgstr ""
+"Non toccare, inserire o rimuovere la testa laser mentre la stampante sta "
+"lavorando"
+
+#: views/make/wizard/safety.php:39
+msgid "I understand and i agree with the conditions"
+msgstr "Ho capito e accetto le condizioni"
+
+#: views/make/wizard/safety.php:39
+msgid "and"
+msgstr "e le"
