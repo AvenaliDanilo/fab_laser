@@ -57,7 +57,7 @@ class Plugin_fab_laser extends FAB_Controller {
 		$this->load->model('Files', 'files');
 		
 		//load plugin translation
-		loadPluginTranslation();
+		loadPluginTranslation('fab_laser', 'fab_laser');
 		
 		$data = array();
 		
@@ -114,7 +114,7 @@ class Plugin_fab_laser extends FAB_Controller {
 		$data['restart_task_url_file'] = plugin_url('make', true);
 		
 		// jog_setup
-		$data['jog_message'] = _('Position the laser point to the origin (bottom-left corner) of the drawing.<br>Jog to desired XY position, press <i class="fa fa-bullseye"></i> and then press "Engrave" ');
+		$data['jog_message'] = dgettext('fab_laser', 'Position the laser point to the origin (bottom-left corner) of the drawing.<br>Jog to desired XY position, press <i class="fa fa-bullseye"></i> and then press "Engrave" ');
 		$data['jog_image']   = !$data['is_laser_pro'] ? plugin_assets_url('img/fabui_laser_02a.png') : plugin_assets_url('img/fabui_laser_pro_02a.png');
 		$data['fourth_axis'] = False;
 		
@@ -126,31 +126,31 @@ class Plugin_fab_laser extends FAB_Controller {
 		$data['rpm_max'] = 255;
 		
 		// job finish
-		$data['z_height_save_message'] = _("Z's height correction is <strong><span class=\"z-height\"></span></strong>, do you want to save it and override the value for the next engraving?");
+		$data['z_height_save_message'] = dgettext('fab_laser', "Z's height correction is <strong><span class=\"z-height\"></span></strong>, do you want to save it and override the value for the next engraving?");
 		$data['task_jump_restart']     = 3;
 		
 		$data['steps'] = array(
 				array('number'  => 1,
-				 'title'   => _('Choose File'),
+				 'title'   => dgettext('fab_laser', 'Choose File'),
 				 'content' => !$task_is_running ? $this->load->view( 'std/select_file', $data, true ) : '',
 				 'active'  => !$file_is_ok && !$task_is_running
 			    ),
 				array('number'  => 2,
-				 'title'   => _('Safety'),
+				  'title'   => dgettext('fab_laser', 'Safety'),
 				 'content' => !$task_is_running ? $this->load->view( plugin_url('make/wizard/safety'), $data, true ) : '',
 				 'active'  => $file_is_ok && !$task_is_running
 			    ),
 				array('number'  => 3,
-				 'title'   => _('Get Ready'),
+				 'title'   => dgettext('fab_laser', 'Get Ready'),
 				 'content' => !$task_is_running ? $this->load->view( 'std/jog_setup', $data, true ) : '',
 			    ),
 				array('number'  => 4,
-				 'title'   => _('Laser Engraving'),
+				 'title'   => dgettext('fab_laser', 'Laser Engraving'),
 				 'content' => $this->load->view( 'std/task_execute', $data, true ),
 				 'active' => $task_is_running
 			    ),
 				array('number'  => 5,
-				 'title'   => _('Finish'),
+				 'title'   => dgettext('fab_laser', 'Finish'),
 				 'content' => $this->load->view( 'std/task_finished', $data, true )
 			    )
 			);
@@ -254,7 +254,7 @@ class Plugin_fab_laser extends FAB_Controller {
 
 		$response = array(
 			'start' => false, 
-			'message' => _("Task Not Implemented yet."), 
+		    'message' => dgettext('fab_laser', "Task Not Implemented yet."), 
 			'trace' => '', 
 			'error' => ''
 			);

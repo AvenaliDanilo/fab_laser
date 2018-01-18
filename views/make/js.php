@@ -152,7 +152,7 @@
 	function startTask()
 	{
 		console.log('Starting task');
-		openWait('<i class="fa fa-spinner fa-spin "></i> ' + "<?php echo _('Preparing {0}');?>".format("<?php echo _(ucfirst($type)); ?>"), _("Checking safety measures...") );
+		openWait('<i class="fa fa-spinner fa-spin "></i> ' + "<?php echo dgettext('fab_laser', 'Preparing {0}');?>".format("<?php echo _(ucfirst($type)); ?>"), dgettext("fab_laser", "Checking safety measures...") );
 		
 		var data = {
 			idFile:idFile,

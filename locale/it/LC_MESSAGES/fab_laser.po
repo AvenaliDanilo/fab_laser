@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2018-01-17 17:37+0100\n"
-"PO-Revision-Date: 2018-01-17 17:47+0100\n"
+"POT-Creation-Date: 2018-01-18 11:12+0100\n"
+"PO-Revision-Date: 2018-01-18 11:17+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: it\n"
@@ -12,6 +12,7 @@ msgstr ""
 "X-Generator: Poedit 2.0.5\n"
 "X-Poedit-Basepath: ../../..\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-KeywordsList: Automatic focal point\n"
 "X-Poedit-SearchPath-0: scripts\n"
 "X-Poedit-SearchPath-1: scripts/py\n"
 "X-Poedit-SearchPath-2: controller.php\n"
@@ -23,6 +24,9 @@ msgid ""
 "<br>Jog to desired XY position, press <i class=\"fa fa-bullseye\"></i> and "
 "then press \"Engrave\" "
 msgstr ""
+"Posizione il laser sull'origine (angolo in basso a sinistra). Spostati sulla "
+"posizione desiderata, premi <i class=\"fa fa-bullseye\"></i> e poi premi "
+"\"Incisione Laser\" "
 
 #: controller.php:129
 msgid ""
@@ -80,15 +84,15 @@ msgstr "Incisione laser annullata"
 
 #: scripts/py/engrave.py:98
 msgid "Engraving Initialized."
-msgstr "Incisione laser inizializzata"
+msgstr "Incisione laser inizializzata."
 
 #: scripts/py/engrave.py:105
 msgid "Task ID."
-msgstr "Task ID"
+msgstr "Task ID."
 
 #: scripts/py/engrave.py:106
 msgid "File name."
-msgstr "Nome file"
+msgstr "Nome file."
 
 #: views/make/js.php:155
 msgid "Preparing {0}"
@@ -118,15 +122,15 @@ msgstr ""
 
 #: views/make/wizard/safety.php:28
 msgid "Put the provided safety goggles now before continuing"
-msgstr "Metti gli occhiali di protezione forniti prima di continuare"
+msgstr "Prima di continuare metti gli occhiali di protezione forniti"
 
 #: views/make/wizard/safety.php:29
 msgid ""
 "Make sure no one else can approach the  unit without proper safety goggles "
 "and being informed of the hazard"
 msgstr ""
-"Assicurarsi che nessun altro possa avvicinarsi alla stampante senza "
-"occhiali di protezione adeguati ed essere informato del pericolo"
+"Assicurarsi che nessun altro possa avvicinarsi alla stampante senza occhiali "
+"di protezione adeguati ed essere informato del pericolo"
 
 #: views/make/wizard/safety.php:30
 msgid "Do not remove the goggles unless it's safe to do so"
