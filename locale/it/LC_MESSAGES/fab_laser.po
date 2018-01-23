@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2018-01-18 11:12+0100\n"
-"PO-Revision-Date: 2018-01-18 11:17+0100\n"
+"POT-Creation-Date: 2018-01-23 12:11+0100\n"
+"PO-Revision-Date: 2018-01-23 12:11+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.5\n"
+"X-Generator: Poedit 2.0.6\n"
 "X-Poedit-Basepath: ../../..\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-KeywordsList: Automatic focal point\n"
@@ -60,7 +60,7 @@ msgstr "Prego attendere..."
 
 #: controller.php:257
 msgid "Task Not Implemented yet."
-msgstr ""
+msgstr "Attività ancora non implementata."
 
 #: scripts/py/engrave.py:61
 msgid "Engraving STARTED"
